@@ -12,17 +12,17 @@ use Illuminate\Support\Str;
 class OrderController extends Controller
 {
     /**
-     * Create and store a new food order.
+     * Create and store a new food order for Kushtia, Bangladesh.
      */
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'customer_name' => 'required|string|max:100',
             'customer_phone' => 'required|string|max:20',
-            'customer_email' => 'required|email|max:100',
+            'customer_email' => 'nullable|email|max:100',
             'delivery_address' => 'required|string|max:255',
             'notes' => 'nullable|string|max:500',
-            'payment_method' => 'required|string|in:card,cash,apple_pay',
+            'payment_method' => 'required|string|in:bkash,nagad,rocket,cash',
             'items' => 'required|array|min:1',
             'items.*.id' => 'required|integer',
             'items.*.name' => 'required|string',
@@ -40,7 +40,8 @@ class OrderController extends Controller
             $subtotal += $itemTotal;
         }
 
-        $deliveryFee = $subtotal >= 35.00 ? 0.00 : 3.99;
+        // Delivery fee in Kushtia: ৳40 (Free on ৳400+)
+        $deliveryFee = $subtotal >= 400.00 ? 0.00 : 40.00;
         $discount = 0.00;
 
         if (!empty($validated['promo_code'])) {
@@ -53,18 +54,18 @@ class OrderController extends Controller
             }
         }
 
-        $tax = round(($subtotal - $discount) * 0.08, 2); // 8% sales tax
+        $tax = round(($subtotal - $discount) * 0.05, 2); // 5% VAT in BD
         $tax = max(0, $tax);
         $tip = (float) ($validated['tip'] ?? 0);
         $total = max(0, round($subtotal - $discount + $deliveryFee + $tax + $tip, 2));
 
-        $orderCode = 'FD-' . strtoupper(Str::random(6));
+        $orderCode = 'KUS-' . strtoupper(Str::random(6));
 
         $order = Order::create([
             'order_code' => $orderCode,
             'customer_name' => $validated['customer_name'],
             'customer_phone' => $validated['customer_phone'],
-            'customer_email' => $validated['customer_email'],
+            'customer_email' => $validated['customer_email'] ?? 'customer@kushtia.com',
             'delivery_address' => $validated['delivery_address'],
             'notes' => $validated['notes'] ?? null,
             'payment_method' => $validated['payment_method'],
@@ -82,13 +83,13 @@ class OrderController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Order placed successfully!',
+            'message' => 'কুষ্টিয়া এক্সপ্রেস এ আপনার অর্ডারটি সফলভাবে গৃহীত হয়েছে!',
             'order' => $order,
         ]);
     }
 
     /**
-     * API: Live order tracking endpoint.
+     * API: Live order tracking endpoint for Kushtia town.
      */
     public function track(string $orderCode): JsonResponse
     {
@@ -101,14 +102,13 @@ class OrderController extends Controller
             ], 404);
         }
 
-        // Calculate simulated dynamic delivery progression based on created_at time
         $minutesAgo = Carbon::now()->diffInMinutes($order->created_at);
 
         $status = 'received';
         $progress = 25;
-        $driverName = 'Alex Rodriguez';
-        $driverPhone = '+1 (555) 234-5678';
-        $driverVehicle = 'Eco-Electric Vespa (Plate: NY-782)';
+        $driverName = 'Md. Tanvir Hossain (তানভীর)';
+        $driverPhone = '+880 1712-345678';
+        $driverVehicle = 'Hero Hunk 150R (কুষ্টিয়া-হ-১১-৮৭৬৫)';
 
         if ($minutesAgo >= 15) {
             $status = 'delivered';
@@ -131,15 +131,15 @@ class OrderController extends Controller
                     'name' => $driverName,
                     'phone' => $driverPhone,
                     'vehicle' => $driverVehicle,
-                    'rating' => 4.95,
-                    'photo' => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+                    'rating' => 4.96,
+                    'photo' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
                 ],
                 'estimated_minutes_left' => max(1, 25 - $minutesAgo),
                 'steps' => [
-                    ['title' => 'Order Received', 'description' => 'Restaurant confirmed your order', 'done' => true, 'time' => $order->created_at->format('h:i A')],
-                    ['title' => 'In the Kitchen', 'description' => 'Master Chef preparing your meal fresh', 'done' => $progress >= 50, 'time' => $order->created_at->addMinutes(3)->format('h:i A')],
-                    ['title' => 'On the Way', 'description' => 'Driver en route with thermal insulated bag', 'done' => $progress >= 75, 'time' => $order->created_at->addMinutes(12)->format('h:i A')],
-                    ['title' => 'Delivered', 'description' => 'Handed over at your doorstep', 'done' => $progress >= 100, 'time' => $order->created_at->addMinutes(25)->format('h:i A')],
+                    ['title' => 'অর্ডার গৃহীত হয়েছে (Order Received)', 'description' => 'রেস্টুরেন্টে আপনার অর্ডারটি গৃহীত হয়েছে', 'done' => true, 'time' => $order->created_at->format('h:i A')],
+                    ['title' => 'রান্না চলছে (Kitchen Preparing)', 'description' => 'শেফ আপনার খাবারটি টাটকা প্রস্তুত করছেন', 'done' => $progress >= 50, 'time' => $order->created_at->addMinutes(3)->format('h:i A')],
+                    ['title' => 'রাইডার পথে আছে (Rider On the Way)', 'description' => 'গরম ও নিরাপদ প্যাকেজিংয়ে রাইডার কুষ্টিয়ার রাস্তায় রয়েছে', 'done' => $progress >= 75, 'time' => $order->created_at->addMinutes(12)->format('h:i A')],
+                    ['title' => 'ডেলিভারি সম্পন্ন (Delivered)', 'description' => 'আপনার ঠিকানায় খাবার পৌঁছে দেওয়া হয়েছে', 'done' => $progress >= 100, 'time' => $order->created_at->addMinutes(25)->format('h:i A')],
                 ]
             ]
         ]);

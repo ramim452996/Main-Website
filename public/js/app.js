@@ -1,13 +1,12 @@
 /**
- * CRAVE EXPRESS - MODERN SINGLE PAGE APPLICATION JAVASCRIPT ENGINE
- * Handles Theme, Cart, AJAX Search & Filters, Food Customization,
- * Coupon Validation, Checkout & Real-time Live Order Tracking.
+ * KUSHTIA CRAVE EXPRESS - JAVASCRIPT APP ENGINE
+ * Customized for Kushtia, Bangladesh (BDT ৳, bKash, Nagad, Cash On Delivery)
  */
 
 class CraveApp {
     constructor() {
-        this.cart = JSON.parse(localStorage.getItem('crave_cart') || '[]');
-        this.appliedCoupon = JSON.parse(localStorage.getItem('crave_coupon') || 'null');
+        this.cart = JSON.parse(localStorage.getItem('kushtia_cart') || '[]');
+        this.appliedCoupon = JSON.parse(localStorage.getItem('kushtia_coupon') || 'null');
         this.activeCategory = 'all';
         this.activeDietFilters = {
             vegetarian: false,
@@ -18,7 +17,7 @@ class CraveApp {
         this.currentSort = 'popular';
         this.searchQuery = '';
         this.currentCustomizingItem = null;
-        this.activeOrder = JSON.parse(localStorage.getItem('crave_active_order') || 'null');
+        this.activeOrder = JSON.parse(localStorage.getItem('kushtia_active_order') || 'null');
         this.trackingInterval = null;
 
         this.init();
@@ -29,7 +28,6 @@ class CraveApp {
         this.renderCart();
         this.bindEvents();
         
-        // If there's an active recent order, offer to view tracking
         if (this.activeOrder) {
             const trackBtn = document.getElementById('recentOrderTrackBtn');
             if (trackBtn) trackBtn.style.display = 'inline-flex';
@@ -40,7 +38,7 @@ class CraveApp {
        1. THEME TOGGLE ENGINE (DARK / LIGHT)
        ========================================== */
     initTheme() {
-        const savedTheme = localStorage.getItem('crave_theme') || 
+        const savedTheme = localStorage.getItem('kushtia_theme') || 
             (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         
         this.setTheme(savedTheme);
@@ -57,7 +55,7 @@ class CraveApp {
 
     setTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('crave_theme', theme);
+        localStorage.setItem('kushtia_theme', theme);
 
         const toggleBtn = document.getElementById('themeToggleBtn');
         if (toggleBtn) {
@@ -71,7 +69,6 @@ class CraveApp {
        2. EVENT BINDINGS
        ========================================== */
     bindEvents() {
-        // Search Input (Hero & Nav)
         const heroSearch = document.getElementById('heroSearchInput');
         if (heroSearch) {
             heroSearch.addEventListener('input', (e) => {
@@ -80,7 +77,6 @@ class CraveApp {
             });
         }
 
-        // Category Tab Buttons
         document.querySelectorAll('.category-tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 document.querySelectorAll('.category-tab-btn').forEach(b => b.classList.remove('active'));
@@ -90,7 +86,6 @@ class CraveApp {
             });
         });
 
-        // Dietary Filter Pills
         document.querySelectorAll('.filter-pill').forEach(pill => {
             pill.addEventListener('click', () => {
                 const filterKey = pill.dataset.filter;
@@ -100,7 +95,6 @@ class CraveApp {
             });
         });
 
-        // Sort Dropdown
         const sortSelect = document.getElementById('sortSelect');
         if (sortSelect) {
             sortSelect.addEventListener('change', (e) => {
@@ -109,7 +103,6 @@ class CraveApp {
             });
         }
 
-        // Cart Drawer Open / Close
         const cartTrigger = document.getElementById('cartDrawerTrigger');
         const cartClose = document.getElementById('cartDrawerClose');
         const cartOverlay = document.getElementById('cartOverlay');
@@ -118,7 +111,6 @@ class CraveApp {
         if (cartClose) cartClose.addEventListener('click', () => this.closeCart());
         if (cartOverlay) cartOverlay.addEventListener('click', () => this.closeCart());
 
-        // Coupon Apply Button in Cart
         const applyCouponBtn = document.getElementById('applyCouponBtn');
         if (applyCouponBtn) {
             applyCouponBtn.addEventListener('click', () => {
@@ -129,12 +121,11 @@ class CraveApp {
             });
         }
 
-        // Checkout Trigger
         const checkoutBtn = document.getElementById('proceedCheckoutBtn');
         if (checkoutBtn) {
             checkoutBtn.addEventListener('click', () => {
                 if (this.cart.length === 0) {
-                    this.showToast('Your cart is empty!', 'error');
+                    this.showToast('আপনার কার্ট খালি রয়েছে!', 'error');
                     return;
                 }
                 this.closeCart();
@@ -142,7 +133,6 @@ class CraveApp {
             });
         }
 
-        // Checkout Form Submit
         const checkoutForm = document.getElementById('checkoutForm');
         if (checkoutForm) {
             checkoutForm.addEventListener('submit', (e) => {
@@ -151,7 +141,6 @@ class CraveApp {
             });
         }
 
-        // Payment Method Selectors
         document.querySelectorAll('.payment-method-card').forEach(card => {
             card.addEventListener('click', () => {
                 document.querySelectorAll('.payment-method-card').forEach(c => c.classList.remove('active'));
@@ -161,17 +150,15 @@ class CraveApp {
             });
         });
 
-        // Copy Promo Code Buttons
         document.querySelectorAll('.coupon-copy-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const code = btn.dataset.code;
                 navigator.clipboard.writeText(code);
-                this.showToast(`Promo code '${code}' copied to clipboard!`, 'success');
+                this.showToast(`কুপন কোড '${code}' কপি করা হয়েছে!`, 'success');
                 this.applyCouponCode(code);
             });
         });
 
-        // Quick Tag Clickers in Hero
         document.querySelectorAll('.quick-tag-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const cat = btn.dataset.category;
@@ -190,7 +177,6 @@ class CraveApp {
         const grid = document.getElementById('foodItemsGrid');
         if (!grid) return;
 
-        // Show subtle loading state
         grid.style.opacity = '0.5';
 
         const params = new URLSearchParams({
@@ -225,15 +211,14 @@ class CraveApp {
             grid.innerHTML = `
                 <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
                     <div style="font-size: 3rem; margin-bottom: 12px;">🍲</div>
-                    <h3 style="font-size: 1.4rem; margin-bottom: 8px;">No gourmet dishes match your filter</h3>
-                    <p style="color: var(--text-muted); font-size: 0.95rem;">Try resetting your filters or searching for something else.</p>
+                    <h3 style="font-size: 1.4rem; margin-bottom: 8px;">কোনো খাবার খুঁজে পাওয়া যায়নি</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">অন্য কিছু লিখে সার্চ করুন অথবা ফিল্টার পরিবর্তন করুন।</p>
                 </div>
             `;
             return;
         }
 
         grid.innerHTML = items.map(item => {
-            const tags = item.tags || [];
             const isSpicy = item.is_spicy;
             const isVeg = item.is_vegetarian;
 
@@ -242,9 +227,9 @@ class CraveApp {
                     <div class="food-card-img-wrap">
                         <img src="${item.image}" alt="${item.name}" loading="lazy" />
                         <div class="food-card-badges">
-                            ${item.is_chef_special ? `<span class="badge badge-brand">Chef Special</span>` : ''}
-                            ${isVeg ? `<span class="badge badge-success">Vegetarian</span>` : ''}
-                            ${isSpicy ? `<span class="badge badge-spicy">🌶️ Spicy</span>` : ''}
+                            ${item.is_chef_special ? `<span class="badge badge-brand">কুষ্টিয়া স্পেশাল</span>` : ''}
+                            ${isVeg ? `<span class="badge badge-success">নিরামিষ / Veg</span>` : ''}
+                            ${isSpicy ? `<span class="badge badge-spicy">🌶️ ঝাল</span>` : ''}
                         </div>
                         <div class="food-rating-badge">
                             ★ <span>${item.rating.toFixed(1)}</span> (${item.reviews_count})
@@ -259,23 +244,23 @@ class CraveApp {
                             ${item.calories ? `
                             <div class="food-meta-item">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c1.5 3 4 5 4 9 0 4.4-3.6 8-8 8s-8-3.6-8-8c0-4 2.5-6 4-9 1.5 3 2.5 4 4 4s2.5-1 4-4z"></path></svg>
-                                <span>${item.calories} kcal</span>
+                                <span>${item.calories} ক্যালোরি</span>
                             </div>` : ''}
                         </div>
                         <h4 class="food-item-name">${item.name}</h4>
                         <p class="food-item-desc">${item.description}</p>
                         <div class="food-card-footer">
                             <div class="price-wrap">
-                                <span class="food-price">$${item.price.toFixed(2)}</span>
-                                ${item.original_price ? `<span class="original-price">$${item.original_price.toFixed(2)}</span>` : ''}
+                                <span class="food-price">৳${item.price.toFixed(0)}</span>
+                                ${item.original_price ? `<span class="original-price">৳${item.original_price.toFixed(0)}</span>` : ''}
                             </div>
                             <div class="card-action-group">
-                                <button class="btn-customize" onclick="window.craveApp.openCustomizeModal(${JSON.stringify(item).replace(/"/g, '&quot;')})" title="Customize ingredients & size">
+                                <button class="btn-customize" onclick="window.craveApp.openCustomizeModal(${JSON.stringify(item).replace(/"/g, '&quot;')})" title="কাস্টমাইজ ও অপশন">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                                 </button>
                                 <button class="btn-add-cart" onclick="window.craveApp.quickAddToCart(${JSON.stringify(item).replace(/"/g, '&quot;')})">
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                                    Add
+                                    অর্ডার
                                 </button>
                             </div>
                         </div>
@@ -296,10 +281,10 @@ class CraveApp {
 
         if (!modal || !modalBody) return;
 
-        modalTitle.innerText = `Customize: ${item.name}`;
+        modalTitle.innerText = `কাস্টমাইজ: ${item.name}`;
 
         const opts = item.customization_options || {};
-        const sizes = opts.sizes || [{ name: 'Regular Portion', price: 0 }];
+        const sizes = opts.sizes || [{ name: 'Regular Serving', price: 0 }];
         const toppings = opts.toppings || [];
 
         modalBody.innerHTML = `
@@ -307,13 +292,13 @@ class CraveApp {
                 <img src="${item.image}" alt="${item.name}" style="width: 80px; height: 80px; border-radius: 12px; object-fit: cover;" />
                 <div>
                     <h4 style="font-size: 1.1rem; font-weight: 700;">${item.name}</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-muted);">$${item.price.toFixed(2)} Base Price</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">মূল্য: ৳${item.price.toFixed(0)}</p>
                 </div>
             </div>
 
             <!-- Size Selector -->
             <div style="margin-bottom: 20px;">
-                <label class="form-label">Choose Size / Portion</label>
+                <label class="form-label">পরিমাণ / সাইজ নির্বাচন করুন</label>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
                     ${sizes.map((s, idx) => `
                         <label style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface-2); padding: 10px 14px; border-radius: 10px; cursor: pointer; border: 1px solid var(--border-light);">
@@ -321,7 +306,7 @@ class CraveApp {
                                 <input type="radio" name="customSize" value="${idx}" ${idx === 0 ? 'checked' : ''} onchange="window.craveApp.recalculateCustomPrice()" />
                                 <span style="font-weight: 600; font-size: 0.9rem;">${s.name}</span>
                             </div>
-                            <span style="font-size: 0.85rem; font-weight: 700; color: var(--brand-primary);">${s.price > 0 ? `+$${s.price.toFixed(2)}` : 'Included'}</span>
+                            <span style="font-size: 0.85rem; font-weight: 700; color: var(--brand-primary);">${s.price > 0 ? `+৳${s.price.toFixed(0)}` : 'অন্তর্ভুক্ত'}</span>
                         </label>
                     `).join('')}
                 </div>
@@ -330,7 +315,7 @@ class CraveApp {
             <!-- Addons / Toppings -->
             ${toppings.length > 0 ? `
             <div style="margin-bottom: 20px;">
-                <label class="form-label">Extra Toppings & Addons</label>
+                <label class="form-label">অতিরিক্ত আইটেম ও স্পেশাল মসলা</label>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
                     ${toppings.map((top, idx) => `
                         <label style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface-2); padding: 10px 14px; border-radius: 10px; cursor: pointer; border: 1px solid var(--border-light);">
@@ -338,7 +323,7 @@ class CraveApp {
                                 <input type="checkbox" class="custom-topping-cb" value="${idx}" data-price="${top.price}" data-name="${top.name}" onchange="window.craveApp.recalculateCustomPrice()" />
                                 <span style="font-weight: 600; font-size: 0.9rem;">${top.name}</span>
                             </div>
-                            <span style="font-size: 0.85rem; font-weight: 700; color: var(--brand-primary);">+$${top.price.toFixed(2)}</span>
+                            <span style="font-size: 0.85rem; font-weight: 700; color: var(--brand-primary);">+৳${top.price.toFixed(0)}</span>
                         </label>
                     `).join('')}
                 </div>
@@ -346,8 +331,8 @@ class CraveApp {
 
             <!-- Special Chef Instructions -->
             <div class="form-group">
-                <label class="form-label">Special Cooking Instructions</label>
-                <textarea id="customNotesInput" class="form-control" rows="2" placeholder="e.g. Extra napkins, no onions, sauce on the side"></textarea>
+                <label class="form-label">রান্নার বিশেষ নির্দেশিকা (ঐচ্ছিক)</label>
+                <textarea id="customNotesInput" class="form-control" rows="2" placeholder="যেমন: ঝাল কম দিবেন, পেঁয়াজ বেরেস্তা বেশি দিবেন..."></textarea>
             </div>
         `;
 
@@ -359,7 +344,7 @@ class CraveApp {
         if (!this.currentCustomizingItem) return;
         const item = this.currentCustomizingItem;
         const opts = item.customization_options || {};
-        const sizes = opts.sizes || [{ name: 'Regular Portion', price: 0 }];
+        const sizes = opts.sizes || [{ name: 'Regular Serving', price: 0 }];
 
         const selectedSizeIdx = document.querySelector('input[name="customSize"]:checked')?.value || 0;
         const sizePrice = sizes[selectedSizeIdx] ? sizes[selectedSizeIdx].price : 0;
@@ -372,7 +357,7 @@ class CraveApp {
         const singleItemTotal = item.price + sizePrice + toppingsPrice;
         const totalBtn = document.getElementById('customizeAddCartBtn');
         if (totalBtn) {
-            totalBtn.innerText = `Add to Order • $${singleItemTotal.toFixed(2)}`;
+            totalBtn.innerText = `কার্টে যোগ করুন • ৳${singleItemTotal.toFixed(0)}`;
         }
     }
 
@@ -380,7 +365,7 @@ class CraveApp {
         if (!this.currentCustomizingItem) return;
         const item = this.currentCustomizingItem;
         const opts = item.customization_options || {};
-        const sizes = opts.sizes || [{ name: 'Regular Portion', price: 0 }];
+        const sizes = opts.sizes || [{ name: 'Regular', price: 0 }];
 
         const selectedSizeIdx = document.querySelector('input[name="customSize"]:checked')?.value || 0;
         const selectedSize = sizes[selectedSizeIdx] || { name: 'Regular', price: 0 };
@@ -410,7 +395,7 @@ class CraveApp {
 
         this.addItemToCart(cartItem);
         this.closeModal('customizeModal');
-        this.showToast(`Added ${item.name} to cart!`, 'success');
+        this.showToast(`কার্টে যোগ হয়েছে: ${item.name}!`, 'success');
     }
 
     quickAddToCart(item) {
@@ -428,7 +413,7 @@ class CraveApp {
         };
 
         this.addItemToCart(cartItem);
-        this.showToast(`Added ${item.name} to cart!`, 'brand');
+        this.showToast(`কার্টে যোগ হয়েছে: ${item.name}!`, 'brand');
     }
 
     /* ==========================================
@@ -458,11 +443,11 @@ class CraveApp {
     }
 
     saveCart() {
-        localStorage.setItem('crave_cart', JSON.stringify(this.cart));
+        localStorage.setItem('kushtia_cart', JSON.stringify(this.cart));
         if (this.appliedCoupon) {
-            localStorage.setItem('crave_coupon', JSON.stringify(this.appliedCoupon));
+            localStorage.setItem('kushtia_coupon', JSON.stringify(this.appliedCoupon));
         } else {
-            localStorage.removeItem('crave_coupon');
+            localStorage.removeItem('kushtia_coupon');
         }
     }
 
@@ -481,7 +466,6 @@ class CraveApp {
     }
 
     renderCart() {
-        // Update nav badge count
         const totalCount = this.cart.reduce((sum, i) => sum + i.quantity, 0);
         const badge = document.getElementById('navCartCount');
         if (badge) {
@@ -496,9 +480,9 @@ class CraveApp {
             list.innerHTML = `
                 <div style="text-align: center; padding: 60px 20px;">
                     <div style="font-size: 3rem; margin-bottom: 12px;">🛒</div>
-                    <h4 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 6px;">Your cart is empty</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Explore our gourmet menu and satisfy your cravings!</p>
-                    <button class="btn btn-primary" onclick="window.craveApp.closeCart(); document.getElementById('menu-catalog').scrollIntoView({behavior: 'smooth'})">Browse Menu</button>
+                    <h4 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 6px;">আপনার কার্ট খালি</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">কুষ্টিয়ার সুস্বাদু খাবার উপভোগ করতে মেনু দেখুন!</p>
+                    <button class="btn btn-primary" onclick="window.craveApp.closeCart(); document.getElementById('menu-catalog').scrollIntoView({behavior: 'smooth'})">মেনু দেখুন</button>
                 </div>
             `;
             this.updateCartSummary(0);
@@ -522,7 +506,7 @@ class CraveApp {
                             </div>
                         </div>
                         <div class="cart-item-bottom">
-                            <span style="font-weight: 800; font-size: 0.95rem; color: var(--text-main);">$${itemTotal.toFixed(2)}</span>
+                            <span style="font-weight: 800; font-size: 0.95rem; color: var(--text-main);">৳${itemTotal.toFixed(0)}</span>
                             <div class="cart-qty-picker">
                                 <button class="qty-btn" onclick="window.craveApp.updateItemQuantity('${item.cart_key}', -1)">-</button>
                                 <span class="qty-val">${item.quantity}</span>
@@ -538,8 +522,7 @@ class CraveApp {
     }
 
     updateCartSummary(subtotal) {
-        // Free Delivery threshold: $35.00
-        const freeDeliveryThreshold = 35.00;
+        const freeDeliveryThreshold = 400.00;
         const progress = Math.min(100, (subtotal / freeDeliveryThreshold) * 100);
         const meterFill = document.getElementById('deliveryProgressFill');
         const meterText = document.getElementById('deliveryProgressText');
@@ -547,16 +530,15 @@ class CraveApp {
         if (meterFill && meterText) {
             meterFill.style.width = `${progress}%`;
             if (subtotal >= freeDeliveryThreshold) {
-                meterText.innerHTML = `🎉 You unlocked <strong>FREE Express Delivery!</strong>`;
+                meterText.innerHTML = `🎉 আপনি পাচ্ছেন <strong>ফ্রি এক্সপ্রেস ডেলিভারি!</strong>`;
             } else {
-                const diff = (freeDeliveryThreshold - subtotal).toFixed(2);
-                meterText.innerHTML = `Add <strong>$${diff}</strong> more for <strong>FREE Delivery</strong>`;
+                const diff = (freeDeliveryThreshold - subtotal).toFixed(0);
+                meterText.innerHTML = `আর মাত্র <strong>৳${diff}</strong> অর্ডারে <strong>ফ্রি ডেলিভারি</strong>`;
             }
         }
 
-        const deliveryFee = (subtotal >= freeDeliveryThreshold || subtotal === 0) ? 0.00 : 3.99;
+        const deliveryFee = (subtotal >= freeDeliveryThreshold || subtotal === 0) ? 0.00 : 40.00;
 
-        // Calculate discount
         let discount = 0.00;
         if (this.appliedCoupon && subtotal > 0) {
             if (this.appliedCoupon.type === 'percentage') {
@@ -568,19 +550,19 @@ class CraveApp {
             }
         }
 
-        const tax = subtotal > 0 ? (subtotal - discount) * 0.08 : 0;
-        const total = Math.max(0, subtotal - discount + deliveryFee + tax);
+        const vat = subtotal > 0 ? (subtotal - discount) * 0.05 : 0;
+        const total = Math.max(0, subtotal - discount + deliveryFee + vat);
 
-        document.getElementById('cartSubtotal').innerText = `$${subtotal.toFixed(2)}`;
-        document.getElementById('cartDeliveryFee').innerText = deliveryFee === 0 ? 'FREE' : `$${deliveryFee.toFixed(2)}`;
-        document.getElementById('cartTax').innerText = `$${tax.toFixed(2)}`;
-        document.getElementById('cartTotal').innerText = `$${total.toFixed(2)}`;
+        document.getElementById('cartSubtotal').innerText = `৳${subtotal.toFixed(0)}`;
+        document.getElementById('cartDeliveryFee').innerText = deliveryFee === 0 ? 'ফ্রি' : `৳${deliveryFee.toFixed(0)}`;
+        document.getElementById('cartTax').innerText = `৳${vat.toFixed(0)}`;
+        document.getElementById('cartTotal').innerText = `৳${total.toFixed(0)}`;
 
         const discountRow = document.getElementById('cartDiscountRow');
         if (discountRow) {
             if (discount > 0) {
                 discountRow.style.display = 'flex';
-                document.getElementById('cartDiscountVal').innerText = `-$${discount.toFixed(2)} (${this.appliedCoupon.code})`;
+                document.getElementById('cartDiscountVal').innerText = `-৳${discount.toFixed(0)} (${this.appliedCoupon.code})`;
             } else {
                 discountRow.style.display = 'none';
             }
@@ -605,7 +587,7 @@ class CraveApp {
                 body: JSON.stringify({
                     code: cleanCode,
                     subtotal: subtotal,
-                    delivery_fee: 3.99
+                    delivery_fee: 40.00
                 })
             });
 
@@ -621,22 +603,21 @@ class CraveApp {
                 this.renderCart();
                 this.showToast(data.message, 'success');
             } else {
-                this.showToast(data.message || 'Invalid coupon code', 'error');
+                this.showToast(data.message || 'ভুল কুপন কোড', 'error');
             }
         } catch (err) {
-            // Fallback offline verification
-            if (cleanCode === 'TASTY30') {
-                this.appliedCoupon = { code: 'TASTY30', type: 'percentage', value: 30, title: '30% Off' };
+            if (cleanCode === 'KUSHTIA50') {
+                this.appliedCoupon = { code: 'KUSHTIA50', type: 'fixed', value: 50, title: '৳৫০ ছাড়' };
                 this.saveCart();
                 this.renderCart();
-                this.showToast("Coupon 'TASTY30' applied!", 'success');
-            } else if (cleanCode === 'FREEDEL') {
-                this.appliedCoupon = { code: 'FREEDEL', type: 'free_delivery', value: 3.99, title: 'Free Delivery' };
+                this.showToast("কুপন 'KUSHTIA50' সক্রিয় হয়েছে!", 'success');
+            } else if (cleanCode === 'GORAI') {
+                this.appliedCoupon = { code: 'GORAI', type: 'free_delivery', value: 40, title: 'ফ্রি ডেলিভারি' };
                 this.saveCart();
                 this.renderCart();
-                this.showToast("Coupon 'FREEDEL' applied!", 'success');
+                this.showToast("কুপন 'GORAI' সক্রিয় হয়েছে!", 'success');
             } else {
-                this.showToast("Invalid promo code. Try TASTY30 or FREEDEL.", 'error');
+                this.showToast("ভুল কুপন কোড। KUSHTIA50 অথবা GORAI ট্রাই করুন।", 'error');
             }
         }
     }
@@ -646,8 +627,8 @@ class CraveApp {
        ========================================== */
     openCheckoutModal() {
         const subtotal = this.cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
-        const freeDeliveryThreshold = 35.00;
-        const deliveryFee = (subtotal >= freeDeliveryThreshold || subtotal === 0) ? 0.00 : 3.99;
+        const freeDeliveryThreshold = 400.00;
+        const deliveryFee = (subtotal >= freeDeliveryThreshold || subtotal === 0) ? 0.00 : 40.00;
         
         let discount = 0;
         if (this.appliedCoupon) {
@@ -656,10 +637,10 @@ class CraveApp {
             else if (this.appliedCoupon.type === 'free_delivery') discount = deliveryFee;
         }
 
-        const tax = (subtotal - discount) * 0.08;
-        const total = Math.max(0, subtotal - discount + deliveryFee + tax);
+        const vat = (subtotal - discount) * 0.05;
+        const total = Math.max(0, subtotal - discount + deliveryFee + vat);
 
-        document.getElementById('checkoutOrderSummaryTotal').innerText = `$${total.toFixed(2)}`;
+        document.getElementById('checkoutOrderSummaryTotal').innerText = `৳${total.toFixed(0)}`;
         this.openModal('checkoutModal');
     }
 
@@ -669,25 +650,24 @@ class CraveApp {
         if (!form || !submitBtn) return;
 
         submitBtn.disabled = true;
-        submitBtn.innerText = 'Confirming Order with Kitchen...';
+        submitBtn.innerText = 'অর্ডার কনফার্ম করা হচ্ছে...';
 
         const name = document.getElementById('custName').value;
         const phone = document.getElementById('custPhone').value;
-        const email = document.getElementById('custEmail').value;
         const address = document.getElementById('custAddress').value;
         const notes = document.getElementById('custNotes').value;
-        const paymentMethod = document.getElementById('selectedPaymentMethod').value || 'card';
+        const paymentMethod = document.getElementById('selectedPaymentMethod').value || 'bkash';
 
         const payload = {
             customer_name: name,
             customer_phone: phone,
-            customer_email: email,
+            customer_email: 'customer@kushtia.com',
             delivery_address: address,
             notes: notes,
             payment_method: paymentMethod,
             items: this.cart,
             promo_code: this.appliedCoupon?.code || null,
-            tip: 2.50
+            tip: 0
         };
 
         try {
@@ -709,20 +689,19 @@ class CraveApp {
 
                 this.closeModal('checkoutModal');
                 this.activeOrder = data.order;
-                localStorage.setItem('crave_active_order', JSON.stringify(data.order));
+                localStorage.setItem('kushtia_active_order', JSON.stringify(data.order));
 
                 const trackBtn = document.getElementById('recentOrderTrackBtn');
                 if (trackBtn) trackBtn.style.display = 'inline-flex';
 
-                this.showToast('Order Placed Successfully!', 'success');
+                this.showToast('অর্ডার সফলভাবে সম্পন্ন হয়েছে!', 'success');
                 this.openTrackingModal(data.order.order_code);
             } else {
-                this.showToast(data.message || 'Error placing order.', 'error');
+                this.showToast(data.message || 'অর্ডার করতে সমস্যা হয়েছে।', 'error');
             }
         } catch (err) {
             console.error('Order submission error:', err);
-            // Simulated fallback order code
-            const mockCode = 'FD-' + Math.floor(100000 + Math.random() * 900000);
+            const mockCode = 'KUS-' + Math.floor(100000 + Math.random() * 900000);
             this.cart = [];
             this.appliedCoupon = null;
             this.saveCart();
@@ -731,7 +710,7 @@ class CraveApp {
             this.openTrackingModal(mockCode);
         } finally {
             submitBtn.disabled = false;
-            submitBtn.innerText = 'Place Order & Start Express Delivery';
+            submitBtn.innerText = 'অর্ডার কনফার্ম করুন (Confirm Order)';
         }
     }
 
@@ -739,11 +718,11 @@ class CraveApp {
        8. REAL-TIME LIVE ORDER TRACKER MODAL
        ========================================== */
     openTrackingModal(orderCode) {
-        const code = orderCode || this.activeOrder?.order_code || 'FD-829104';
+        const code = orderCode || this.activeOrder?.order_code || 'KUS-934812';
         const modal = document.getElementById('trackingModal');
         if (!modal) return;
 
-        document.getElementById('trackOrderCodeDisplay').innerText = `Order #${code}`;
+        document.getElementById('trackOrderCodeDisplay').innerText = `অর্ডার #${code}`;
         this.openModal('trackingModal');
 
         this.pollOrderStatus(code);
@@ -766,10 +745,10 @@ class CraveApp {
 
     renderTrackingDetails(tracking, order) {
         const eta = document.getElementById('trackingEtaMinutes');
-        if (eta) eta.innerText = `${tracking.estimated_minutes_left} Mins`;
+        if (eta) eta.innerText = `${tracking.estimated_minutes_left} মিনিট`;
 
         const stageTitle = document.getElementById('trackingStatusStage');
-        if (stageTitle) stageTitle.innerText = tracking.steps.find(s => !s.done)?.title || 'Delivered';
+        if (stageTitle) stageTitle.innerText = tracking.steps.find(s => !s.done)?.title || 'ডেলিভারি সম্পন্ন';
 
         const stepsWrap = document.getElementById('trackingTimelineSteps');
         if (stepsWrap) {
@@ -789,23 +768,23 @@ class CraveApp {
             stepsWrap.innerHTML = `
                 <div class="timeline-step completed">
                     <div class="step-dot"></div>
-                    <div class="step-title">Order Received & Paid</div>
-                    <div class="step-desc">Restaurant confirmed your ticket • Just now</div>
+                    <div class="step-title">অর্ডার গৃহীত হয়েছে (Order Received)</div>
+                    <div class="step-desc">কুষ্টিয়া রেস্টুরেন্টে আপনার অর্ডারটি গৃহীত হয়েছে • এইমাত্র</div>
                 </div>
                 <div class="timeline-step active">
                     <div class="step-dot"></div>
-                    <div class="step-title">In the Kitchen</div>
-                    <div class="step-desc">Chef is grilling & assembling your meal fresh with organic ingredients</div>
+                    <div class="step-title">রান্না চলছে (Kitchen Preparing)</div>
+                    <div class="step-desc">টাটকা ও গরম গরম খাবার প্রস্তুত করা হচ্ছে</div>
                 </div>
                 <div class="timeline-step">
                     <div class="step-dot"></div>
-                    <div class="step-title">Driver On the Way</div>
-                    <div class="step-desc">Express courier assigned with insulated thermal container</div>
+                    <div class="step-title">রাইডার পথে আছে (Rider On the Way)</div>
+                    <div class="step-desc">নিরাপদ থার্মাল বক্সে রাইডার কুষ্টিয়ার রাস্তায় রয়েছে</div>
                 </div>
                 <div class="timeline-step">
                     <div class="step-dot"></div>
-                    <div class="step-title">Delivered</div>
-                    <div class="step-desc">Handed over fresh to your doorstep</div>
+                    <div class="step-title">ডেলিভারি সম্পন্ন (Delivered)</div>
+                    <div class="step-desc">আপনার দোরগোড়ায় খাবার হস্তান্তর করা হয়েছে</div>
                 </div>
             `;
         }
@@ -844,7 +823,6 @@ class CraveApp {
     }
 }
 
-// Instantiate global app on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
     window.craveApp = new CraveApp();
 });

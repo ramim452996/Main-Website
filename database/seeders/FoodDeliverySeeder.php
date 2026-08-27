@@ -10,46 +10,46 @@ use Illuminate\Database\Seeder;
 class FoodDeliverySeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeds for Kushtia, Bangladesh Food Delivery.
      */
     public function run(): void
     {
-        // 1. Promo Codes
+        // 1. Kushtia Specific Promo Codes (in BDT ৳)
         $promos = [
             [
-                'code' => 'TASTY30',
-                'title' => '30% OFF First Order',
-                'description' => 'Save 30% on gourmet meals over $25',
-                'type' => 'percentage',
-                'value' => 30.00,
-                'min_spend' => 25.00,
-                'is_active' => true,
-            ],
-            [
-                'code' => 'FREEDEL',
-                'title' => 'Zero Delivery Fee',
-                'description' => 'Free express contactless delivery on orders above $20',
-                'type' => 'free_delivery',
-                'value' => 3.99,
-                'min_spend' => 20.00,
-                'is_active' => true,
-            ],
-            [
-                'code' => 'CHEF15',
-                'title' => '$15 Chef Discount',
-                'description' => 'Flat $15 off on premium chef special orders over $50',
+                'code' => 'KUSHTIA50',
+                'title' => '৳৫০ ছাড় প্রথম অর্ডারে',
+                'description' => 'কুষ্টিয়া শহরের যেকোনো অর্ডারে ৳৩০০ এর উপর ৳৫০ ছাড়!',
                 'type' => 'fixed',
-                'value' => 15.00,
-                'min_spend' => 50.00,
+                'value' => 50.00,
+                'min_spend' => 300.00,
                 'is_active' => true,
             ],
             [
-                'code' => 'BURGERDAY',
-                'title' => '20% OFF Burgers',
-                'description' => 'Special burger weekend discount',
+                'code' => 'GORAI',
+                'title' => 'ফ্রি হোম ডেলিভারি',
+                'description' => '৳৪০০ এর যেকোনো অর্ডারে কুষ্টিয়া পৌরসভা এলাকায় ফ্রি ডেলিভারি',
+                'type' => 'free_delivery',
+                'value' => 40.00,
+                'min_spend' => 400.00,
+                'is_active' => true,
+            ],
+            [
+                'code' => 'KACHI100',
+                'title' => '৳১০০ মেগা ডিসকাউন্ট',
+                'description' => 'ফ্যামিলি কাচ্চি ও স্পেশাল প্ল্যাটার অর্ডারে ৳১০০ ডিসকাউন্ট',
+                'type' => 'fixed',
+                'value' => 100.00,
+                'min_spend' => 800.00,
+                'is_active' => true,
+            ],
+            [
+                'code' => 'KULFI20',
+                'title' => '২০% মিষ্টি ও কুলফি ছাড়',
+                'description' => 'কুষ্টিয়ার বিখ্যাত কুলফি মালাই ও মিষ্টান্নে ২০% ছাড়',
                 'type' => 'percentage',
                 'value' => 20.00,
-                'min_spend' => 15.00,
+                'min_spend' => 200.00,
                 'is_active' => true,
             ]
         ];
@@ -58,428 +58,417 @@ class FoodDeliverySeeder extends Seeder
             PromoCode::updateOrCreate(['code' => $promo['code']], $promo);
         }
 
-        // 2. Categories & Food Items
+        // 2. Categories & Authentic Kushtia / Bengali Food Items
         $catalog = [
             [
-                'name' => 'Signature Burgers',
-                'slug' => 'burgers',
-                'icon' => 'beef',
-                'tagline' => 'Prime Angus, Brioche buns & artisanal melted cheeses',
+                'name' => 'Kushtia Heritage & Kulfi',
+                'slug' => 'kushtia-heritage',
+                'icon' => 'ice-cream',
+                'tagline' => 'কুষ্টিয়ার শতাব্দী প্রাচীন বিখ্যাত কুলফি মালাই ও তিলের খাজা',
                 'display_order' => 1,
                 'items' => [
                     [
-                        'name' => 'Truffle Umami Bacon Burger',
-                        'slug' => 'truffle-umami-bacon-burger',
-                        'description' => 'Double smash dry-aged Angus beef, crispy smoked applewood bacon, black truffle aioli, melted aged Gruyère cheese, and caramelized shallots on a toasted brioche bun.',
-                        'price' => 18.50,
-                        'original_price' => 22.00,
+                        'name' => 'Kushtia Famous Royal Shahi Kulfi Malai',
+                        'slug' => 'kushtia-royal-kulfi-malai',
+                        'description' => 'কুষ্টিয়ার খাঁটি ঘন ক্ষীর, পেস্তা বাদাম, কাজুবাদাম ও জাফরান দিয়ে তৈরি ঐতিহ্যবাহী বিখ্যাত কুলফি মালাই। মুখে দিলেই স্বর্গীয় স্বাদ!',
+                        'price' => 120.00,
+                        'original_price' => 150.00,
+                        'rating' => 5.0,
+                        'reviews_count' => 890,
+                        'prep_time' => '10-15 min',
+                        'calories' => 280,
+                        'image' => 'https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=800&q=80',
+                        'is_featured' => true,
+                        'is_popular' => true,
+                        'is_chef_special' => true,
+                        'is_vegetarian' => true,
+                        'is_spicy' => false,
+                        'spice_level' => 0,
+                        'tags' => ['Kushtia Special', 'Top Seller', 'Pure Milk'],
+                        'customization_options' => [
+                            'sizes' => [
+                                ['name' => 'Standard Pot (1 Pc)', 'price' => 0],
+                                ['name' => 'Double Joy Box (2 Pcs)', 'price' => 110.00],
+                                ['name' => 'Family Pack (4 Pcs)', 'price' => 220.00],
+                            ],
+                            'toppings' => [
+                                ['name' => 'Extra Saffron & Roasted Pistachio', 'price' => 30.00],
+                                ['name' => 'Sweet Rabri Layer Drizzle', 'price' => 40.00],
+                            ]
+                        ]
+                    ],
+                    [
+                        'name' => 'Traditional Kushtia Til Khaja & Chomchom Platter',
+                        'slug' => 'traditional-til-khaja-chomchom',
+                        'description' => 'কুষ্টিয়ার বিখ্যাত ক্রিস্পি তিলের খাজা ও খাঁটি ছানার সুস্বাদু চমচম ও কাঁচাগোল্লা বক্স।',
+                        'price' => 250.00,
+                        'original_price' => 290.00,
                         'rating' => 4.9,
-                        'reviews_count' => 384,
+                        'reviews_count' => 420,
+                        'prep_time' => '10-15 min',
+                        'calories' => 450,
+                        'image' => 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80',
+                        'is_featured' => true,
+                        'is_popular' => true,
+                        'is_chef_special' => false,
+                        'is_vegetarian' => true,
+                        'is_spicy' => false,
+                        'spice_level' => 0,
+                        'tags' => ['Heritage Food', 'Sweet Lover'],
+                        'customization_options' => [
+                            'sizes' => [
+                                ['name' => 'Half Box (250g)', 'price' => 0],
+                                ['name' => 'Full Box (500g)', 'price' => 220.00],
+                            ],
+                            'toppings' => [
+                                ['name' => 'Mawa Topping Powder', 'price' => 25.00],
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Biryani & Polao Kitchen',
+                'slug' => 'biryani-polao',
+                'icon' => 'bowl-rice',
+                'tagline' => 'বাসমতি চাল, খাঁটি গাওয়া ঘি ও রসালো মাংসে রান্না করা দম বিরিয়ানি',
+                'display_order' => 2,
+                'items' => [
+                    [
+                        'name' => 'Special Shahi Mutton Kachi Biryani with Borhani',
+                        'slug' => 'shahi-mutton-kachi-biryani',
+                        'description' => 'বাসমতি চাল, প্রিমিয়াম খাসির মাংস, আলু বোখারা ও খাঁটি গাওয়া ঘিয়ে জাফরানি দমে রান্না করা কাচ্চি বিরিয়ানি। সাথে ১ গ্লাস স্পেশাল বোরহানি ও ডিম।',
+                        'price' => 420.00,
+                        'original_price' => 480.00,
+                        'rating' => 4.9,
+                        'reviews_count' => 740,
                         'prep_time' => '15-20 min',
-                        'calories' => 840,
-                        'image' => 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80',
+                        'calories' => 880,
+                        'image' => 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80',
                         'is_featured' => true,
                         'is_popular' => true,
                         'is_chef_special' => true,
                         'is_vegetarian' => false,
                         'is_spicy' => false,
-                        'spice_level' => 0,
-                        'tags' => ['Best Seller', 'Chef Choice', 'Double Patty'],
+                        'spice_level' => 1,
+                        'tags' => ['Must Try', 'Bestseller', 'Free Borhani'],
                         'customization_options' => [
                             'sizes' => [
-                                ['name' => 'Single Patty (6oz)', 'price' => 0],
-                                ['name' => 'Double Patty (12oz)', 'price' => 4.50],
-                                ['name' => 'Triple Beast (18oz)', 'price' => 8.00],
+                                ['name' => '1:1 Single Plate', 'price' => 0],
+                                ['name' => '1:2 Double Meat Platter', 'price' => 380.00],
+                                ['name' => '1:4 Family Feast Pack', 'price' => 1150.00],
                             ],
                             'toppings' => [
-                                ['name' => 'Extra Truffle Aioli', 'price' => 1.50],
-                                ['name' => 'Crispy Smoked Bacon', 'price' => 2.50],
-                                ['name' => 'Avocado Slices', 'price' => 2.00],
-                                ['name' => 'Organic Fried Egg', 'price' => 1.75],
-                                ['name' => 'Pickled Jalapeños', 'price' => 1.00],
+                                ['name' => 'Extra Shahi Mutton Piece', 'price' => 180.00],
+                                ['name' => 'Extra Fried Egg (ডিম)', 'price' => 25.00],
+                                ['name' => 'Extra 250ml Spicy Borhani', 'price' => 50.00],
+                                ['name' => 'Sweet Jorda (জর্দা)', 'price' => 60.00],
                             ]
                         ]
                     ],
                     [
-                        'name' => 'Smoky Nashville Hot Chicken Burger',
-                        'slug' => 'nashville-hot-chicken-burger',
-                        'description' => 'Crispy buttermilk chicken breast drenched in fiery Nashville cayenne butter glaze, creamy house slaw, garlic pickles, and honey-drizzle kewpie mayo.',
-                        'price' => 16.25,
-                        'original_price' => 18.50,
+                        'name' => 'Old Town Morog Polao with Roast Chicken Leg',
+                        'slug' => 'old-town-morog-polao',
+                        'description' => 'সুগন্ধি চিনিগুঁড়া চালের ঝরঝরে পোলাও এবং ঐতিহ্যবাহী বাদাম-কিসমিস বাটা গ্রেভিতে রান্না করা মুরগির রোস্ট ও ঝাল চাটনি।',
+                        'price' => 320.00,
+                        'original_price' => 360.00,
                         'rating' => 4.8,
-                        'reviews_count' => 290,
+                        'reviews_count' => 510,
                         'prep_time' => '15-20 min',
-                        'calories' => 760,
-                        'image' => 'https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=800&q=80',
+                        'calories' => 740,
+                        'image' => 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=800&q=80',
                         'is_featured' => true,
+                        'is_popular' => true,
+                        'is_chef_special' => false,
+                        'is_vegetarian' => false,
+                        'is_spicy' => false,
+                        'spice_level' => 1,
+                        'tags' => ['Deshi Chicken', 'Traditional'],
+                        'customization_options' => [
+                            'sizes' => [
+                                ['name' => 'Regular Serving (1 Chicken Leg)', 'price' => 0],
+                                ['name' => 'Double Roast Special', 'price' => 160.00],
+                            ],
+                            'toppings' => [
+                                ['name' => 'Extra Roast Chicken Leg', 'price' => 140.00],
+                                ['name' => 'Fresh Salad & Green Chili Chutney', 'price' => 20.00],
+                            ]
+                        ]
+                    ],
+                    [
+                        'name' => 'Special Beef Tehari with Mustard Oil',
+                        'slug' => 'special-beef-tehari',
+                        'description' => 'খাঁটি সরিষার তেলে ছোট ছোট নরম গরুর মাংসের টুকরো দিয়ে রান্না করা ঝাল ঝাল স্পেশাল গরুর তেহারি।',
+                        'price' => 290.00,
+                        'original_price' => 330.00,
+                        'rating' => 4.8,
+                        'reviews_count' => 630,
+                        'prep_time' => '15-20 min',
+                        'calories' => 810,
+                        'image' => 'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=800&q=80',
+                        'is_featured' => false,
+                        'is_popular' => true,
+                        'is_chef_special' => false,
+                        'is_vegetarian' => false,
+                        'is_spicy' => true,
+                        'spice_level' => 2,
+                        'tags' => ['Mustard Oil', 'Spicy Tehari'],
+                        'customization_options' => [
+                            'sizes' => [
+                                ['name' => 'Single Plate', 'price' => 0],
+                                ['name' => 'Large Plate (+50% Meat)', 'price' => 120.00],
+                            ],
+                            'toppings' => [
+                                ['name' => 'Extra Green Chillies & Lime', 'price' => 15.00],
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Bengali Curry & Gorai Fish',
+                'slug' => 'bengali-curry-fish',
+                'icon' => 'fish',
+                'tagline' => 'কুষ্টিয়ার গড়াই ও পদ্মা নদীর টাটকা ইলিশ এবং স্পেশাল কালা ভুনা',
+                'display_order' => 3,
+                'items' => [
+                    [
+                        'name' => 'Gorai Fresh Ilish Bhuna / Shorshe Ilish (পদ্মার ইলিশ)',
+                        'slug' => 'gorai-fresh-shorshe-ilish',
+                        'description' => 'কুষ্টিয়া গড়াই নদী ও পদ্মা নদীর তাজা বড় ইলিশ মাছের পেটি, খাঁটি সরিষা বাটা ও কাঁচা মরিচে রান্না করা লোভনীয় সরষে ইলিশ।',
+                        'price' => 450.00,
+                        'original_price' => 520.00,
+                        'rating' => 4.9,
+                        'reviews_count' => 490,
+                        'prep_time' => '20-25 min',
+                        'calories' => 610,
+                        'image' => 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=800&q=80',
+                        'is_featured' => true,
+                        'is_popular' => true,
+                        'is_chef_special' => true,
+                        'is_vegetarian' => false,
+                        'is_spicy' => true,
+                        'spice_level' => 2,
+                        'tags' => ['Fresh Catch', 'River Ilish', 'Kushtia Favorite'],
+                        'customization_options' => [
+                            'sizes' => [
+                                ['name' => '1 Big Ilish Piece', 'price' => 0],
+                                ['name' => '2 Pieces Shorshe Platter', 'price' => 420.00],
+                            ],
+                            'toppings' => [
+                                ['name' => 'Steamed Fragrant Basmati Rice (1 Plate)', 'price' => 60.00],
+                                ['name' => 'Ilish Fried Egg / Tel', 'price' => 80.00],
+                            ]
+                        ]
+                    ],
+                    [
+                        'name' => 'Kushtia Royal Beef Kala Bhuna with Butter Naan',
+                        'slug' => 'kushtia-royal-beef-kala-bhuna',
+                        'description' => 'বিশেষ মসলায় মৃদু আঁচে ঘণ্টার পর ঘণ্টা ভুনা করা নরম, তুলতুলে গরুর কালা ভুনা। সাথে ২টি গরম গরম বাটার নান।',
+                        'price' => 380.00,
+                        'original_price' => 430.00,
+                        'rating' => 5.0,
+                        'reviews_count' => 920,
+                        'prep_time' => '15-20 min',
+                        'calories' => 780,
+                        'image' => 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+                        'is_featured' => true,
+                        'is_popular' => true,
+                        'is_chef_special' => true,
+                        'is_vegetarian' => false,
+                        'is_spicy' => true,
+                        'spice_level' => 2,
+                        'tags' => ['Signature Item', 'Chef Choice', 'Tender Beef'],
+                        'customization_options' => [
+                            'sizes' => [
+                                ['name' => 'Standard Bowl (with 2 Naans)', 'price' => 0],
+                                ['name' => 'Large Bowl (with 4 Naans)', 'price' => 280.00],
+                            ],
+                            'toppings' => [
+                                ['name' => 'Extra Butter Naan (1 Pc)', 'price' => 40.00],
+                                ['name' => 'Garlic Naan Upgrade', 'price' => 30.00],
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Burgers & Fast Food',
+                'slug' => 'burgers-fast-food',
+                'icon' => 'beef',
+                'tagline' => 'চিজি গ্রিলড বার্গার, ক্রিস্পি ফ্রাইড চিকেন ও নাগা স্পেশাল',
+                'display_order' => 4,
+                'items' => [
+                    [
+                        'name' => 'Cheesy Naga Smoky Chicken Burger',
+                        'slug' => 'cheesy-naga-smoky-chicken-burger',
+                        'description' => 'স্মোকি গ্রিলড চিকেন প্যাটি, খাঁটি নাগা মরিচের সস, গলিত চিজ ও মেয়োনিজের দারুণ জুগলবন্দী।',
+                        'price' => 240.00,
+                        'original_price' => 280.00,
+                        'rating' => 4.8,
+                        'reviews_count' => 340,
+                        'prep_time' => '15-18 min',
+                        'calories' => 650,
+                        'image' => 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80',
+                        'is_featured' => false,
                         'is_popular' => true,
                         'is_chef_special' => false,
                         'is_vegetarian' => false,
                         'is_spicy' => true,
                         'spice_level' => 3,
-                        'tags' => ['Fiery Hot', 'Crispy', 'Popular'],
+                        'tags' => ['Naga Blast', 'Cheesy', 'Youth Favorite'],
                         'customization_options' => [
                             'sizes' => [
-                                ['name' => 'Regular Cut', 'price' => 0],
-                                ['name' => 'Jumbo Fillet', 'price' => 3.50],
+                                ['name' => 'Single Patty', 'price' => 0],
+                                ['name' => 'Double Smash Patty (+৳৮০)', 'price' => 80.00],
                             ],
                             'toppings' => [
-                                ['name' => 'Extra House Slaw', 'price' => 1.25],
-                                ['name' => 'Ghost Pepper Sauce', 'price' => 1.50],
-                                ['name' => 'Melted Cheddar', 'price' => 1.75],
+                                ['name' => 'Extra Melted Cheddar Slice', 'price' => 35.00],
+                                ['name' => 'Crispy French Fries (Small)', 'price' => 60.00],
                             ]
                         ]
                     ],
                     [
-                        'name' => 'Portobello Truffle Veggie Burger',
-                        'slug' => 'portobello-truffle-veggie-burger',
-                        'description' => 'Herb-marinated grilled Portobello mushroom cap stuffed with smoked provolone, roasted red bell peppers, baby arugula, and basil pesto on artisanal multigrain bun.',
-                        'price' => 15.75,
-                        'original_price' => null,
-                        'rating' => 4.7,
-                        'reviews_count' => 145,
-                        'prep_time' => '12-18 min',
-                        'calories' => 520,
-                        'image' => 'https://images.unsplash.com/photo-1520072959219-c595dc870360?auto=format&fit=crop&w=800&q=80',
-                        'is_featured' => false,
-                        'is_popular' => false,
-                        'is_chef_special' => false,
-                        'is_vegetarian' => true,
-                        'is_spicy' => false,
-                        'spice_level' => 0,
-                        'tags' => ['Vegetarian', 'Plant Powered', 'Low Calorie'],
-                        'customization_options' => [
-                            'sizes' => [
-                                ['name' => 'Standard Stack', 'price' => 0],
-                                ['name' => 'Double Mushroom Stack', 'price' => 4.00],
-                            ],
-                            'toppings' => [
-                                ['name' => 'Goat Cheese Crumbles', 'price' => 2.00],
-                                ['name' => 'Gluten-Free Bun', 'price' => 1.50],
-                            ]
-                        ]
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Artisanal Pizza',
-                'slug' => 'pizza',
-                'icon' => 'pizza',
-                'tagline' => '48h cold-fermented sourdough, San Marzano tomato & woodfired crust',
-                'display_order' => 2,
-                'items' => [
-                    [
-                        'name' => 'Neapolitan Burrata Margherita',
-                        'slug' => 'burrata-margherita-pizza',
-                        'description' => 'Hand-crushed San Marzano D.O.P tomatoes, creamy whole Italian burrata ball, fragrant sweet basil, extra virgin olive oil drizzle on charred sourdough crust.',
-                        'price' => 21.00,
-                        'original_price' => 25.00,
+                        'name' => 'BBQ Supreme Crispy Chicken Pizza 10"',
+                        'slug' => 'bbq-supreme-chicken-pizza',
+                        'description' => 'হাতে তৈরি পাতলা ক্রাস্টের ওপর প্রিমিয়াম চিকেন টিকিয়া, বারবিকিউ সস, ক্যাপসিকাম, ব্ল্যাক অলিভ ও ভরপুর মোজারেলা চিজ।',
+                        'price' => 480.00,
+                        'original_price' => 550.00,
                         'rating' => 4.9,
-                        'reviews_count' => 412,
-                        'prep_time' => '18-22 min',
-                        'calories' => 890,
+                        'reviews_count' => 410,
+                        'prep_time' => '20-25 min',
+                        'calories' => 920,
                         'image' => 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80',
                         'is_featured' => true,
                         'is_popular' => true,
-                        'is_chef_special' => true,
-                        'is_vegetarian' => true,
-                        'is_spicy' => false,
-                        'spice_level' => 0,
-                        'tags' => ['Woodfired', 'Italian Burrata', 'Top Rated'],
-                        'customization_options' => [
-                            'sizes' => [
-                                ['name' => 'Medium 12"', 'price' => 0],
-                                ['name' => 'Large 16"', 'price' => 6.00],
-                            ],
-                            'toppings' => [
-                                ['name' => 'Prosciutto di Parma', 'price' => 4.00],
-                                ['name' => 'Hot Honey Glaze', 'price' => 1.50],
-                                ['name' => 'Kalamata Olives', 'price' => 1.75],
-                                ['name' => 'Fresh Garlic Dip', 'price' => 1.25],
-                            ]
-                        ]
-                    ],
-                    [
-                        'name' => 'Hot Honey Double Pepperoni Supreme',
-                        'slug' => 'hot-honey-pepperoni-pizza',
-                        'description' => 'Crispy cupping pepperoni, spicy calabrese salami, whole milk shredded mozzarella, chili flakes, finished with organic chili-infused hot blossom honey.',
-                        'price' => 23.50,
-                        'original_price' => 26.00,
-                        'rating' => 4.9,
-                        'reviews_count' => 520,
-                        'prep_time' => '15-20 min',
-                        'calories' => 1020,
-                        'image' => 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=800&q=80',
-                        'is_featured' => true,
-                        'is_popular' => true,
                         'is_chef_special' => false,
-                        'is_vegetarian' => false,
-                        'is_spicy' => true,
-                        'spice_level' => 2,
-                        'tags' => ['Customer Favorite', 'Spicy Pepperoni'],
-                        'customization_options' => [
-                            'sizes' => [
-                                ['name' => 'Medium 12"', 'price' => 0],
-                                ['name' => 'Large 16"', 'price' => 6.00],
-                            ],
-                            'toppings' => [
-                                ['name' => 'Extra Crispy Pepperoni', 'price' => 3.00],
-                                ['name' => 'Creamy Ricotta Dollops', 'price' => 2.50],
-                                ['name' => 'Ranch Dipping Sauce', 'price' => 1.25],
-                            ]
-                        ]
-                    ],
-                    [
-                        'name' => 'Wild Truffle & Wild Mushroom Bianco',
-                        'slug' => 'wild-truffle-mushroom-pizza',
-                        'description' => 'White garlic parmesan cream sauce, sautéed shiitake & cremini wild mushrooms, fresh thyme, fior di latte mozzarella, and white truffle oil.',
-                        'price' => 22.75,
-                        'original_price' => null,
-                        'rating' => 4.8,
-                        'reviews_count' => 198,
-                        'prep_time' => '18-22 min',
-                        'calories' => 870,
-                        'image' => 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=800&q=80',
-                        'is_featured' => false,
-                        'is_popular' => false,
-                        'is_chef_special' => true,
-                        'is_vegetarian' => true,
-                        'is_spicy' => false,
-                        'spice_level' => 0,
-                        'tags' => ['Gourmet Truffle', 'Vegetarian'],
-                        'customization_options' => [
-                            'sizes' => [
-                                ['name' => 'Medium 12"', 'price' => 0],
-                                ['name' => 'Large 16"', 'price' => 6.00],
-                            ],
-                            'toppings' => [
-                                ['name' => 'Caramelized Sweet Onions', 'price' => 1.50],
-                                ['name' => 'Gorgonzola Crumbles', 'price' => 2.50],
-                            ]
-                        ]
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Gourmet Asian & Sushi',
-                'slug' => 'asian-sushi',
-                'icon' => 'fish',
-                'tagline' => 'Fresh sashimi grade salmon, slow-simmered rich broths & wok aromatics',
-                'display_order' => 3,
-                'items' => [
-                    [
-                        'name' => 'Tokyo Tonkotsu Black Garlic Ramen',
-                        'slug' => 'tokyo-tonkotsu-ramen',
-                        'description' => '24-hour slow-cooked silky pork bone broth, tender torched chashu pork belly, seasoned soft-boiled ramen egg, black garlic oil, bamboo shoots, and scallions.',
-                        'price' => 19.50,
-                        'original_price' => 22.50,
-                        'rating' => 4.9,
-                        'reviews_count' => 640,
-                        'prep_time' => '15-20 min',
-                        'calories' => 780,
-                        'image' => 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80',
-                        'is_featured' => true,
-                        'is_popular' => true,
-                        'is_chef_special' => true,
                         'is_vegetarian' => false,
                         'is_spicy' => false,
                         'spice_level' => 1,
-                        'tags' => ['Signature Broth', '24h Simmered', 'Best Seller'],
+                        'tags' => ['Cheesy Pizza', 'Family Size'],
                         'customization_options' => [
                             'sizes' => [
-                                ['name' => 'Regular Bowl', 'price' => 0],
-                                ['name' => 'Extra Noodle Refill (Kaedama)', 'price' => 2.50],
+                                ['name' => 'Medium 10 Inch (6 Slices)', 'price' => 0],
+                                ['name' => 'Large 12 Inch (8 Slices)', 'price' => 200.00],
                             ],
                             'toppings' => [
-                                ['name' => 'Extra Chashu Pork (2pcs)', 'price' => 3.50],
-                                ['name' => 'Extra Ajitsuke Tamago (Egg)', 'price' => 2.00],
-                                ['name' => 'Spicy Chili Paste Ball', 'price' => 1.00],
-                                ['name' => 'Nori Seaweed Sheets (4pcs)', 'price' => 1.25],
-                            ]
-                        ]
-                    ],
-                    [
-                        'name' => 'Torched Spicy Salmon Dragon Roll',
-                        'slug' => 'torched-spicy-salmon-dragon-roll',
-                        'description' => 'Tempura king prawn and avocado inside, wrapped with Atlantic salmon flame-torched tableside, spicy sriracha mayo, sweet unagi sauce, and crispy tobiko roe (8 pcs).',
-                        'price' => 18.00,
-                        'original_price' => 20.00,
-                        'rating' => 4.9,
-                        'reviews_count' => 310,
-                        'prep_time' => '15-18 min',
-                        'calories' => 540,
-                        'image' => 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=800&q=80',
-                        'is_featured' => true,
-                        'is_popular' => true,
-                        'is_chef_special' => true,
-                        'is_vegetarian' => false,
-                        'is_spicy' => true,
-                        'spice_level' => 2,
-                        'tags' => ['Fresh Catch', 'Flame Torched', 'Gluten Friendly'],
-                        'customization_options' => [
-                            'sizes' => [
-                                ['name' => 'Standard Roll (8 pcs)', 'price' => 0],
-                                ['name' => 'Party Set (16 pcs)', 'price' => 16.00],
-                            ],
-                            'toppings' => [
-                                ['name' => 'Extra Pickled Ginger & Wasabi', 'price' => 1.00],
-                                ['name' => 'Spicy Mayo Dip Cup', 'price' => 1.25],
+                                ['name' => 'Extra Cheese Burst Crust', 'price' => 90.00],
+                                ['name' => 'Garlic Mayo Dip Cup', 'price' => 30.00],
                             ]
                         ]
                     ]
                 ]
             ],
             [
-                'name' => 'Healthy Bowls & Greens',
-                'slug' => 'healthy-bowls',
-                'icon' => 'salad',
-                'tagline' => 'Farm-to-table organic produce, nutrient-packed grain bases & superfoods',
-                'display_order' => 4,
+                'name' => 'Kushtia Street Snacks & Fuchka',
+                'slug' => 'street-snacks',
+                'icon' => 'utensils',
+                'tagline' => 'স্পেশাল টক-ঝাল-মিষ্টি ফুচকা, কুষ্টিয়ার স্পেশাল চটপটি ও হালিম',
+                'display_order' => 5,
                 'items' => [
                     [
-                        'name' => 'Ahi Tuna & Mango Sunrise Poke Bowl',
-                        'slug' => 'ahi-tuna-mango-poke-bowl',
-                        'description' => 'Sashimi-grade yellowfin tuna, ripe mango cubes, Hass avocado, edamame, shredded purple cabbage, wakame seaweed salad over warm organic sushi rice with sesame ponzu.',
-                        'price' => 18.90,
-                        'original_price' => 21.00,
+                        'name' => 'Kushtia Special Dahi Fuchka Platter (10 Pcs)',
+                        'slug' => 'kushtia-special-dahi-fuchka',
+                        'description' => 'মুচমুচে ফুচকা, ভেতরে আলু-মটর ও ডিমের পুর, ওপরে মিষ্টি দই, পুদিনা পাতা, সেউ ও তেঁতুলের ঘন চাটনি।',
+                        'price' => 160.00,
+                        'original_price' => 190.00,
+                        'rating' => 4.9,
+                        'reviews_count' => 680,
+                        'prep_time' => '8-12 min',
+                        'calories' => 320,
+                        'image' => 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80',
+                        'is_featured' => false,
+                        'is_popular' => true,
+                        'is_chef_special' => false,
+                        'is_vegetarian' => true,
+                        'is_spicy' => true,
+                        'spice_level' => 2,
+                        'tags' => ['Street Food', 'Dahi Fuchka', 'Crispy'],
+                        'customization_options' => [
+                            'sizes' => [
+                                ['name' => 'Platter (10 Pcs)', 'price' => 0],
+                                ['name' => 'Jumbo Platter (20 Pcs)', 'price' => 140.00],
+                            ],
+                            'toppings' => [
+                                ['name' => 'Extra Sweet Curd & Tamarind Sauce', 'price' => 30.00],
+                            ]
+                        ]
+                    ],
+                    [
+                        'name' => 'Shahi Mutton Haleem with Fried Onion & Ginger',
+                        'slug' => 'shahi-mutton-haleem',
+                        'description' => 'বিভিন্ন রকমের ডাল ও গমের সাথে ঘণ্টার পর ঘণ্টা সিদ্ধ খাসির মাংসের ঘন সুস্বাদু শাহী হালিম। বেরেস্তা ও লেবু সহ।',
+                        'price' => 220.00,
+                        'original_price' => 260.00,
                         'rating' => 4.8,
-                        'reviews_count' => 280,
+                        'reviews_count' => 390,
                         'prep_time' => '10-15 min',
                         'calories' => 490,
                         'image' => 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
                         'is_featured' => false,
-                        'is_popular' => true,
-                        'is_chef_special' => false,
-                        'is_vegetarian' => false,
-                        'is_spicy' => false,
-                        'spice_level' => 1,
-                        'tags' => ['High Protein', 'Gluten-Free', 'Superfood'],
-                        'customization_options' => [
-                            'sizes' => [
-                                ['name' => 'Regular Bowl', 'price' => 0],
-                                ['name' => 'Protein Monster Bowl (+50% Tuna)', 'price' => 4.50],
-                            ],
-                            'toppings' => [
-                                ['name' => 'Spicy Sesame Drizzle', 'price' => 0.75],
-                                ['name' => 'Crispy Wonton Strips', 'price' => 1.00],
-                                ['name' => 'Extra Hass Avocado', 'price' => 2.00],
-                            ]
-                        ]
-                    ],
-                    [
-                        'name' => 'Mediterranean Grilled Halloumi & Quinoa',
-                        'slug' => 'mediterranean-halloumi-quinoa-bowl',
-                        'description' => 'Crispy Cypriot grilled halloumi cheese, roasted chickpeas, organic tri-color quinoa, heirloom cherry tomatoes, cucumber, Kalamata olives, and lemon-tahini herb dressing.',
-                        'price' => 16.50,
-                        'original_price' => null,
-                        'rating' => 4.7,
-                        'reviews_count' => 175,
-                        'prep_time' => '10-14 min',
-                        'calories' => 510,
-                        'image' => 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80',
-                        'is_featured' => false,
-                        'is_popular' => false,
-                        'is_chef_special' => false,
-                        'is_vegetarian' => true,
-                        'is_spicy' => false,
-                        'spice_level' => 0,
-                        'tags' => ['Vegetarian', 'Clean Eating', 'Fiber Rich'],
-                        'customization_options' => [
-                            'sizes' => [
-                                ['name' => 'Standard Bowl', 'price' => 0],
-                                ['name' => 'Large Salad Bowl', 'price' => 3.50],
-                            ],
-                            'toppings' => [
-                                ['name' => 'Extra Grilled Halloumi (3pcs)', 'price' => 3.00],
-                                ['name' => 'Warm Pita Bread Triangle', 'price' => 1.50],
-                            ]
-                        ]
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Desserts & Bakery',
-                'slug' => 'desserts',
-                'icon' => 'cake',
-                'tagline' => 'Handcrafted French pastries, Belgian chocolate & velvet cheesecakes',
-                'display_order' => 5,
-                'items' => [
-                    [
-                        'name' => 'Molten Belgian Chocolate Lava Cake',
-                        'slug' => 'molten-chocolate-lava-cake',
-                        'description' => 'Warm 70% dark Belgian cocoa sponge oozing with molten ganache center, served with Madagascar bourbon vanilla bean ice cream and raspberry coulis.',
-                        'price' => 11.50,
-                        'original_price' => 13.00,
-                        'rating' => 4.9,
-                        'reviews_count' => 450,
-                        'prep_time' => '10-12 min',
-                        'calories' => 580,
-                        'image' => 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80',
-                        'is_featured' => true,
-                        'is_popular' => true,
-                        'is_chef_special' => false,
-                        'is_vegetarian' => true,
-                        'is_spicy' => false,
-                        'spice_level' => 0,
-                        'tags' => ['Warm Dessert', 'Sweet Tooth Favorite'],
-                        'customization_options' => [
-                            'sizes' => [
-                                ['name' => 'Single Cake', 'price' => 0],
-                                ['name' => 'Twin Shareable Cakes', 'price' => 9.50],
-                            ],
-                            'toppings' => [
-                                ['name' => 'Extra Vanilla Ice Cream Scoop', 'price' => 2.50],
-                                ['name' => 'Fresh Wild Berries Medley', 'price' => 2.00],
-                            ]
-                        ]
-                    ],
-                    [
-                        'name' => 'Matcha Pistachio Basque Burnt Cheesecake',
-                        'slug' => 'matcha-pistachio-cheesecake',
-                        'description' => 'Caramelized burnt exterior with an ultra-creamy Uji ceremonial matcha center, roasted Sicilian pistachio praline paste, and gold leaf flake.',
-                        'price' => 12.00,
-                        'original_price' => null,
-                        'rating' => 4.8,
-                        'reviews_count' => 210,
-                        'prep_time' => '5-10 min',
-                        'calories' => 460,
-                        'image' => 'https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&w=800&q=80',
-                        'is_featured' => false,
                         'is_popular' => false,
                         'is_chef_special' => true,
-                        'is_vegetarian' => true,
-                        'is_spicy' => false,
-                        'spice_level' => 0,
-                        'tags' => ['Artisanal', 'Ceremonial Matcha'],
+                        'is_vegetarian' => false,
+                        'is_spicy' => true,
+                        'spice_level' => 2,
+                        'tags' => ['Rich Protein', 'Mutton Haleem'],
                         'customization_options' => [
                             'sizes' => [
-                                ['name' => 'Generous Slice', 'price' => 0],
-                                ['name' => 'Whole 6" Cake (Pre-order)', 'price' => 38.00],
+                                ['name' => 'Single Bowl (350ml)', 'price' => 0],
+                                ['name' => 'Family Bowl (750ml)', 'price' => 190.00],
                             ],
                             'toppings' => [
-                                ['name' => 'Salted Caramel Drizzle', 'price' => 1.25],
+                                ['name' => 'Extra Crispy Fried Beresta', 'price' => 20.00],
                             ]
                         ]
                     ]
                 ]
             ],
             [
-                'name' => 'Handcrafted Drinks',
-                'slug' => 'drinks',
+                'name' => 'Drinks & Traditional Borhani',
+                'slug' => 'drinks-beverages',
                 'icon' => 'coffee',
-                'tagline' => 'Cold brew, pressed elixirs, botanical mocktails & bubble teas',
+                'tagline' => 'টক-ঝাল বোরহানি, কুষ্টিয়ার স্পেশাল লাচ্ছি ও কোল্ড কফি',
                 'display_order' => 6,
                 'items' => [
                     [
-                        'name' => 'Smoked Blackberry Nitro Cold Brew',
-                        'slug' => 'smoked-blackberry-nitro-cold-brew',
-                        'description' => 'Single-origin Ethiopian Yirgacheffe coffee steeped for 24 hours, infused with nitrogen foam, wild blackberry syrup, and a hint of smoked vanilla.',
-                        'price' => 7.50,
-                        'original_price' => 9.00,
-                        'rating' => 4.8,
-                        'reviews_count' => 180,
+                        'name' => 'Traditional Shahi Spicy Borhani (500ml)',
+                        'slug' => 'traditional-shahi-spicy-borhani',
+                        'description' => 'টক দই, পুদিনা পাতা, বিট লবণ, জিরা ও সরিষা বাটার আসল স্বাদে তৈরি ঠাণ্ডা সুস্বাদু বোরহানি। হজমে অত্যন্ত উপকারী।',
+                        'price' => 90.00,
+                        'original_price' => 110.00,
+                        'rating' => 4.9,
+                        'reviews_count' => 520,
                         'prep_time' => '3-5 min',
-                        'calories' => 120,
+                        'calories' => 140,
+                        'image' => 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=800&q=80',
+                        'is_featured' => false,
+                        'is_popular' => true,
+                        'is_chef_special' => false,
+                        'is_vegetarian' => true,
+                        'is_spicy' => true,
+                        'spice_level' => 1,
+                        'tags' => ['Digestive', 'Cold Beverage', 'Shahi Recipe'],
+                        'customization_options' => [
+                            'sizes' => [
+                                ['name' => '500ml Bottle', 'price' => 0],
+                                ['name' => '1 Litre Family Bottle', 'price' => 80.00],
+                            ],
+                            'toppings' => [
+                                ['name' => 'Mint Boost', 'price' => 15.00],
+                            ]
+                        ]
+                    ],
+                    [
+                        'name' => 'Special Sweet Sweet Lassi with Malai & Pistachio',
+                        'slug' => 'special-sweet-malai-lassi',
+                        'description' => 'ঘন মিষ্টি দই ও বরফে ব্লেন্ড করা লাচ্ছি, ওপরে কুষ্টিয়ার মালাই ও পেস্তা বাদামের কুচি।',
+                        'price' => 110.00,
+                        'original_price' => 130.00,
+                        'rating' => 4.8,
+                        'reviews_count' => 290,
+                        'prep_time' => '5-7 min',
+                        'calories' => 220,
                         'image' => 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=800&q=80',
                         'is_featured' => false,
                         'is_popular' => true,
@@ -487,44 +476,14 @@ class FoodDeliverySeeder extends Seeder
                         'is_vegetarian' => true,
                         'is_spicy' => false,
                         'spice_level' => 0,
-                        'tags' => ['Specialty Coffee', 'Nitro Infused', 'Energizing'],
+                        'tags' => ['Refreshing', 'Sweet Malai'],
                         'customization_options' => [
                             'sizes' => [
-                                ['name' => 'Regular 16oz', 'price' => 0],
-                                ['name' => 'Large 24oz', 'price' => 1.75],
+                                ['name' => 'Regular Glass 300ml', 'price' => 0],
+                                ['name' => 'Jumbo Mug 500ml', 'price' => 50.00],
                             ],
                             'toppings' => [
-                                ['name' => 'Oat Milk Float', 'price' => 0.75],
-                                ['name' => 'Extra Espresso Shot', 'price' => 1.25],
-                            ]
-                        ]
-                    ],
-                    [
-                        'name' => 'Dragonfruit Lychee Sparkler Mocktail',
-                        'slug' => 'dragonfruit-lychee-sparkler',
-                        'description' => 'Fresh crushed red dragonfruit, floral lychee puree, organic sparkling mint water, lime zest, and crystal aloe jelly pearls over crushed ice.',
-                        'price' => 7.00,
-                        'original_price' => null,
-                        'rating' => 4.9,
-                        'reviews_count' => 310,
-                        'prep_time' => '3-5 min',
-                        'calories' => 110,
-                        'image' => 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=800&q=80',
-                        'is_featured' => true,
-                        'is_popular' => true,
-                        'is_chef_special' => false,
-                        'is_vegetarian' => true,
-                        'is_spicy' => false,
-                        'spice_level' => 0,
-                        'tags' => ['Refreshing', '100% Natural', 'Zero Alcohol'],
-                        'customization_options' => [
-                            'sizes' => [
-                                ['name' => 'Regular 16oz', 'price' => 0],
-                                ['name' => 'Large 24oz', 'price' => 1.75],
-                            ],
-                            'toppings' => [
-                                ['name' => 'Extra Lychee Boba Pearls', 'price' => 1.00],
-                                ['name' => 'Chia Seeds Boost', 'price' => 0.75],
+                                ['name' => 'Extra Malai Layer', 'price' => 25.00],
                             ]
                         ]
                     ]
