@@ -55,11 +55,11 @@
 
             <!-- Navigation Links -->
             <ul class="nav-links">
-                <li><a href="#menu-catalog" class="nav-link">খাবারের মেনু (Menu)</a></li>
-                <li><a href="#offers" class="nav-link">অফার ও ডিসকাউন্ট</a></li>
+                <li><a href="#menu-catalog" class="nav-link">খাবারের মেনু</a></li>
+                <li><a href="#offers" class="nav-link">অফার</a></li>
                 <li><a href="#chef-spotlight" class="nav-link">কুষ্টিয়ার স্পেশাল</a></li>
-                <li><a href="#why-us" class="nav-link">আমাদের সেবা</a></li>
-                <li><a href="#reviews" class="nav-link">রিভিউ (Reviews)</a></li>
+                <li><a href="{{ route('order.page') }}" class="nav-link">অর্ডার ট্র্যাকিং</a></li>
+                <li><a href="{{ route('contact.page') }}" class="nav-link">যোগাযোগ</a></li>
             </ul>
 
             <!-- Actions (Theme Toggle, Active Order, Cart Trigger) -->

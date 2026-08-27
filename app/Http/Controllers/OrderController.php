@@ -12,6 +12,22 @@ use Illuminate\Support\Str;
 class OrderController extends Controller
 {
     /**
+     * Display dedicated Orders & Live Tracking page.
+     */
+    public function orderPage(Request $request): \Illuminate\View\View
+    {
+        $orderCode = $request->query('code');
+        $initialOrder = null;
+        if ($orderCode) {
+            $initialOrder = Order::where('order_code', strtoupper($orderCode))->first();
+        }
+
+        $recentOrders = Order::latest()->take(5)->get();
+
+        return view('order', compact('initialOrder', 'recentOrders'));
+    }
+
+    /**
      * Create and store a new food order for Kushtia, Bangladesh.
      */
     public function store(Request $request): JsonResponse
