@@ -14,6 +14,17 @@ Route::get('/order', [OrderController::class, 'orderPage'])->name('order.page');
 Route::get('/orders-bn', [OrderController::class, 'orderPageBn'])->name('order.bn');
 Route::get('/order-bn', [OrderController::class, 'orderPageBn']);
 
+// Standalone Auth Pages
+Route::get('/signup', function () {
+    return view('auth.signup');
+})->name('signup.page');
+Route::get('/register', function () {
+    return view('auth.signup');
+});
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login.page');
+
 // Contact Us Pages
 Route::get('/contact-us', function () {
     return view('contact');
