@@ -18,6 +18,7 @@ class CraveApp {
         this.searchQuery = '';
         this.currentCustomizingItem = null;
         this.activeOrder = JSON.parse(localStorage.getItem('kushtia_active_order') || 'null');
+        this.currentUser = JSON.parse(localStorage.getItem('kushtia_user') || 'null');
         this.trackingInterval = null;
 
         this.init();
@@ -25,6 +26,7 @@ class CraveApp {
 
     init() {
         this.initTheme();
+        this.initAuth();
         this.renderCart();
         this.bindEvents();
         
@@ -638,9 +640,18 @@ class CraveApp {
         }
 
         const vat = (subtotal - discount) * 0.05;
-        const total = Math.max(0, subtotal - discount + deliveryFee + vat);
-
         document.getElementById('checkoutOrderSummaryTotal').innerText = `৳${total.toFixed(0)}`;
+
+        // Auto-fill customer details if logged in
+        if (this.currentUser) {
+            const nameInp = document.getElementById('custName');
+            const phoneInp = document.getElementById('custPhone');
+            const addrInp = document.getElementById('custAddress');
+            if (nameInp && !nameInp.value) nameInp.value = this.currentUser.name || '';
+            if (phoneInp && !phoneInp.value) phoneInp.value = this.currentUser.phone || '';
+            if (addrInp && !addrInp.value) addrInp.value = this.currentUser.address || '';
+        }
+
         this.openModal('checkoutModal');
     }
 
@@ -803,23 +814,175 @@ class CraveApp {
         if (m) m.classList.remove('active');
     }
 
-    showToast(message, type = 'brand') {
-        const container = document.getElementById('toastContainer');
-        if (!container) return;
+    /* ==========================================
+       10. CUSTOMER AUTHENTICATION & PROFILE ENGINE
+       ========================================== */
+    async initAuth() {
+        try {
+            const res = await fetch('/api/auth/me');
+            const data = await res.json();
+            if (data.logged_in && data.user) {
+                this.currentUser = data.user;
+                localStorage.setItem('kushtia_user', JSON.stringify(data.user));
+            } else {
+                this.currentUser = null;
+                localStorage.removeItem('kushtia_user');
+            }
+        } catch (e) {
+            // Keep local cached user if offline
+        }
+        this.renderAuthUI();
+    }
 
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.innerHTML = `
-            <span>${type === 'success' ? '✓' : (type === 'error' ? '✕' : '★')}</span>
-            <span>${message}</span>
-        `;
+    renderAuthUI() {
+        const guestBtns = document.querySelectorAll('.auth-guest-view');
+        const userBtns = document.querySelectorAll('.auth-user-view');
+        const userNames = document.querySelectorAll('.auth-user-name');
+        const userAvatars = document.querySelectorAll('.auth-user-initial');
 
-        container.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateY(15px) scale(0.9)';
-            setTimeout(() => toast.remove(), 300);
-        }, 3500);
+        if (this.currentUser) {
+            guestBtns.forEach(el => el.style.display = 'none');
+            userBtns.forEach(el => el.style.display = 'inline-flex');
+            userNames.forEach(el => el.innerText = this.currentUser.name);
+            const initial = (this.currentUser.name || 'U').charAt(0).toUpperCase();
+            userAvatars.forEach(el => el.innerText = initial);
+        } else {
+            guestBtns.forEach(el => el.style.display = 'inline-flex');
+            userBtns.forEach(el => el.style.display = 'none');
+        }
+    }
+
+    openAuthModal(tab = 'register') {
+        this.switchAuthTab(tab);
+        this.openModal('authModal');
+    }
+
+    switchAuthTab(tab) {
+        const regTabBtn = document.getElementById('tabBtnRegister');
+        const loginTabBtn = document.getElementById('tabBtnLogin');
+        const regForm = document.getElementById('authRegisterForm');
+        const loginForm = document.getElementById('authLoginForm');
+
+        if (tab === 'register') {
+            if (regTabBtn) regTabBtn.classList.add('active');
+            if (loginTabBtn) loginTabBtn.classList.remove('active');
+            if (regForm) regForm.style.display = 'block';
+            if (loginForm) loginForm.style.display = 'none';
+        } else {
+            if (loginTabBtn) loginTabBtn.classList.add('active');
+            if (regTabBtn) regTabBtn.classList.remove('active');
+            if (loginForm) loginForm.style.display = 'block';
+            if (regForm) regForm.style.display = 'none';
+        }
+    }
+
+    async handleRegister(e) {
+        e.preventDefault();
+        const submitBtn = document.getElementById('authRegisterSubmitBtn');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'অ্যাকাউন্ট তৈরি হচ্ছে...';
+        }
+
+        const name = document.getElementById('regName')?.value;
+        const email = document.getElementById('regEmail')?.value;
+        const phone = document.getElementById('regPhone')?.value;
+        const delivery_zone = document.getElementById('regZone')?.value;
+        const address = document.getElementById('regAddress')?.value;
+        const password = document.getElementById('regPassword')?.value;
+
+        try {
+            const res = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                },
+                body: JSON.stringify({ name, email, phone, delivery_zone, address, password })
+            });
+
+            const data = await res.json();
+            if (res.ok && data.status === 'success') {
+                this.currentUser = data.user;
+                localStorage.setItem('kushtia_user', JSON.stringify(data.user));
+                this.renderAuthUI();
+                this.closeModal('authModal');
+                this.showToast(data.message, 'success');
+            } else {
+                this.showToast(data.message || 'নিবন্ধন ব্যর্থ হয়েছে। তথ্য যাচাই করুন।', 'error');
+            }
+        } catch (err) {
+            this.showToast('সার্ভারে সমস্যা হচ্ছে, কিছুক্ষণ পর আবার চেষ্টা করুন।', 'error');
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'সাইন আপ সম্পন্ন করুন';
+            }
+        }
+    }
+
+    async handleLogin(e) {
+        e.preventDefault();
+        const submitBtn = document.getElementById('authLoginSubmitBtn');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'লগইন হচ্ছে...';
+        }
+
+        const login_id = document.getElementById('loginId')?.value;
+        const password = document.getElementById('loginPassword')?.value;
+
+        try {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                },
+                body: JSON.stringify({ login_id, password })
+            });
+
+            const data = await res.json();
+            if (res.ok && data.status === 'success') {
+                this.currentUser = data.user;
+                localStorage.setItem('kushtia_user', JSON.stringify(data.user));
+                this.renderAuthUI();
+                this.closeModal('authModal');
+                this.showToast(data.message, 'success');
+            } else {
+                this.showToast(data.message || 'ভুল মোবাইল নম্বর/ইমেইল অথবা পাসওয়ার্ড।', 'error');
+            }
+        } catch (err) {
+            this.showToast('সার্ভারে সমস্যা হচ্ছে, কিছুক্ষণ পর আবার চেষ্টা করুন।', 'error');
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'লগইন করুন';
+            }
+        }
+    }
+
+    async handleLogout() {
+        try {
+            await fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                }
+            });
+        } catch (e) {}
+
+        this.currentUser = null;
+        localStorage.removeItem('kushtia_user');
+        this.renderAuthUI();
+        this.showToast('আপনি সফলভাবে লগআউট করেছেন।', 'brand');
+        const menu = document.getElementById('authUserDropdownMenu');
+        if (menu) menu.classList.remove('active');
+    }
+
+    toggleUserDropdown() {
+        const menu = document.getElementById('authUserDropdownMenu');
+        if (menu) menu.classList.toggle('active');
     }
 }
 

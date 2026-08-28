@@ -89,6 +89,36 @@
             </ul>
 
             <div class="nav-actions">
+                <!-- Guest Auth Button (Sign Up / Login) -->
+                <button class="auth-nav-btn auth-guest-view" onclick="window.craveApp.openAuthModal('register')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <span>সাইন আপ / লগইন</span>
+                </button>
+
+                <!-- Authenticated User Dropdown -->
+                <div class="auth-user-dropdown-wrap auth-user-view" style="display: none;">
+                    <div class="auth-user-pill" onclick="window.craveApp.toggleUserDropdown()">
+                        <div class="auth-user-avatar auth-user-initial">U</div>
+                        <span class="auth-user-name">কাস্টমার</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div id="authUserDropdownMenu" class="auth-dropdown-menu">
+                        <div style="padding: 6px 12px; border-bottom: 1px solid var(--border-light); margin-bottom: 4px;">
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">লগইন করা অ্যাকাউন্ট</div>
+                            <div style="font-weight: 800; font-size: 0.9rem;" class="auth-user-name">কাস্টমার</div>
+                        </div>
+                        <a href="{{ route('order.bn') }}" class="auth-dropdown-item">
+                            <span>📦 আমার অর্ডারসমূহ</span>
+                        </a>
+                        <a href="{{ route('contact.bn') }}" class="auth-dropdown-item">
+                            <span>💬 হেল্পডেস্ক ও সহায়তা</span>
+                        </a>
+                        <button class="auth-dropdown-item" style="color: var(--danger);" onclick="window.craveApp.handleLogout()">
+                            <span>🚪 লগআউট (Logout)</span>
+                        </button>
+                    </div>
+                </div>
+
                 <!-- English Page Switcher -->
                 <a href="{{ route('order.page') }}" class="lang-switch-badge" title="Switch to English Orders">
                     <span>🇬🇧 English</span>
@@ -290,6 +320,88 @@
             <button id="proceedCheckoutBtn" class="btn btn-primary" style="width: 100%; padding: 14px;" onclick="window.location.href='{{ route('home') }}'">
                 অর্ডার করতে মেনুতে যান
             </button>
+        </div>
+    </div>
+
+    <!-- CUSTOMER SIGN UP & LOGIN MODAL -->
+    <div id="authModal" class="modal-overlay">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 style="font-size: 1.3rem; font-weight: 800;">কাস্টমার অ্যাকাউন্ট • KushtiaExpress</h3>
+                <button class="btn-icon" onclick="window.craveApp.closeModal('authModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- Auth Tabs (Sign Up vs Login) -->
+                <div class="auth-tabs">
+                    <button type="button" id="tabBtnRegister" class="auth-tab-btn active" onclick="window.craveApp.switchAuthTab('register')">
+                        নতুন সাইন আপ (Sign Up)
+                    </button>
+                    <button type="button" id="tabBtnLogin" class="auth-tab-btn" onclick="window.craveApp.switchAuthTab('login')">
+                        লগইন (Sign In)
+                    </button>
+                </div>
+
+                <!-- SIGN UP FORM -->
+                <form id="authRegisterForm" onsubmit="window.craveApp.handleRegister(event)">
+                    <div class="form-group">
+                        <label class="form-label">আপনার পূর্ণ নাম *</label>
+                        <input type="text" id="regName" class="form-control" required placeholder="মোঃ শফিকুল ইসলাম" />
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div class="form-group">
+                            <label class="form-label">মোবাইল নম্বর *</label>
+                            <input type="tel" id="regPhone" class="form-control" required placeholder="017XXXXXXXX" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">ইমেইল ঠিকানা *</label>
+                            <input type="email" id="regEmail" class="form-control" required placeholder="name@example.com" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">কুষ্টিয়া ডেলিভারি জোন</label>
+                        <select id="regZone" class="form-control">
+                            <option value="মজমুপুর গেট ও এনএস রোড">📍 মজমুপুর গেট ও এনএস রোড (সেন্ট্রাল)</option>
+                            <option value="কোর্টপাড়া ও থানা মোড়">📍 কোর্টপাড়া ও থানা মোড়</option>
+                            <option value="ইসলামী বিশ্ববিদ্যালয় ক্যাম্পাস">🎓 ইসলামী বিশ্ববিদ্যালয় (IU) ক্যাম্পাস</option>
+                            <option value="চৌড়হাস মোড় ও গড়াই সেতু">🌉 চৌড়হাস মোড় ও গড়াই সেতু</option>
+                            <option value="হাউজিং এস্টেট ও পুলিশ লাইনস">🏘️ হাউজিং এস্টেট ও পুলিশ লাইনস</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">বাসা/ঠিকানা (ঐচ্ছিক)</label>
+                        <input type="text" id="regAddress" class="form-control" placeholder="বাসা #১২, রোড #৩, মজমুপুর" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর) *</label>
+                        <input type="password" id="regPassword" class="form-control" required minlength="6" placeholder="••••••••" />
+                    </div>
+
+                    <button type="submit" id="authRegisterSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 14px; margin-top: 10px;">
+                        সাইন আপ সম্পন্ন করুন
+                    </button>
+                </form>
+
+                <!-- LOGIN FORM -->
+                <form id="authLoginForm" style="display: none;" onsubmit="window.craveApp.handleLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">মোবাইল নম্বর অথবা ইমেইল *</label>
+                        <input type="text" id="loginId" class="form-control" required placeholder="017XXXXXXXX অথবা email@domain.com" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">পাসওয়ার্ড *</label>
+                        <input type="password" id="loginPassword" class="form-control" required placeholder="••••••••" />
+                    </div>
+
+                    <button type="submit" id="authLoginSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 14px; margin-top: 10px;">
+                        লগইন করুন
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 

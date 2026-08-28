@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Http\Request;
@@ -24,6 +25,12 @@ Route::get('/contact-bn', function () {
 Route::get('/jogajog', function () {
     return view('contact_bn');
 });
+
+// Authentication Endpoints
+Route::post('/api/auth/register', [AuthController::class, 'register'])->name('api.auth.register');
+Route::post('/api/auth/login', [AuthController::class, 'login'])->name('api.auth.login');
+Route::post('/api/auth/logout', [AuthController::class, 'logout'])->name('api.auth.logout');
+Route::get('/api/auth/me', [AuthController::class, 'me'])->name('api.auth.me');
 
 // Contact Form Submission API
 Route::post('/api/contact/submit', function (Request $request) {

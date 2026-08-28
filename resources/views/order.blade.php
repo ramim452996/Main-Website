@@ -83,6 +83,36 @@
             </ul>
 
             <div class="nav-actions">
+                <!-- Guest Auth Button (Sign Up / Login) -->
+                <button class="auth-nav-btn auth-guest-view" onclick="window.craveApp.openAuthModal('register')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <span>Sign In / Register</span>
+                </button>
+
+                <!-- Authenticated User Dropdown -->
+                <div class="auth-user-dropdown-wrap auth-user-view" style="display: none;">
+                    <div class="auth-user-pill" onclick="window.craveApp.toggleUserDropdown()">
+                        <div class="auth-user-avatar auth-user-initial">U</div>
+                        <span class="auth-user-name">Customer</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div id="authUserDropdownMenu" class="auth-dropdown-menu">
+                        <div style="padding: 6px 12px; border-bottom: 1px solid var(--border-light); margin-bottom: 4px;">
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Logged in as</div>
+                            <div style="font-weight: 800; font-size: 0.9rem;" class="auth-user-name">Customer</div>
+                        </div>
+                        <a href="{{ route('order.page') }}" class="auth-dropdown-item">
+                            <span>📦 My Orders</span>
+                        </a>
+                        <a href="{{ route('contact.page') }}" class="auth-dropdown-item">
+                            <span>💬 Support & Helpdesk</span>
+                        </a>
+                        <button class="auth-dropdown-item" style="color: var(--danger);" onclick="window.craveApp.handleLogout()">
+                            <span>🚪 Logout</span>
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Bengali Page Switcher -->
                 <a href="{{ route('order.bn') }}" class="lang-switch-badge" title="বাংলা ভার্সনে দেখুন (Switch to Bengali)">
                     <span>🇧🇩 বাংলা ভার্সন</span>
@@ -284,6 +314,88 @@
             <button id="proceedCheckoutBtn" class="btn btn-primary" style="width: 100%; padding: 14px;" onclick="window.location.href='{{ route('home') }}'">
                 Go to Menu & Order
             </button>
+        </div>
+    </div>
+
+    <!-- CUSTOMER SIGN UP & LOGIN MODAL -->
+    <div id="authModal" class="modal-overlay">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 style="font-size: 1.3rem; font-weight: 800;">Customer Account • KushtiaExpress</h3>
+                <button class="btn-icon" onclick="window.craveApp.closeModal('authModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- Auth Tabs (Sign Up vs Login) -->
+                <div class="auth-tabs">
+                    <button type="button" id="tabBtnRegister" class="auth-tab-btn active" onclick="window.craveApp.switchAuthTab('register')">
+                        Sign Up
+                    </button>
+                    <button type="button" id="tabBtnLogin" class="auth-tab-btn" onclick="window.craveApp.switchAuthTab('login')">
+                        Sign In
+                    </button>
+                </div>
+
+                <!-- SIGN UP FORM -->
+                <form id="authRegisterForm" onsubmit="window.craveApp.handleRegister(event)">
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" id="regName" class="form-control" required placeholder="John Doe" />
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div class="form-group">
+                            <label class="form-label">Mobile Number *</label>
+                            <input type="tel" id="regPhone" class="form-control" required placeholder="017XXXXXXXX" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address *</label>
+                            <input type="email" id="regEmail" class="form-control" required placeholder="name@example.com" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Kushtia Delivery Zone</label>
+                        <select id="regZone" class="form-control">
+                            <option value="মজমুপুর গেট ও এনএস রোড">📍 Mojompur Gate & NS Road (Central)</option>
+                            <option value="কোর্টপাড়া ও থানা মোড়">📍 Court Para & Thana Mor</option>
+                            <option value="ইসলামী বিশ্ববিদ্যালয় ক্যাম্পাস">🎓 Islamic University (IU) Campus</option>
+                            <option value="চৌড়হাস মোড় ও গড়াই সেতু">🌉 Chourhas & Gorai Bridge</option>
+                            <option value="হাউজিং এস্টেট ও পুলিশ লাইনস">🏘️ Housing Estate & Police Lines</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Address (Optional)</label>
+                        <input type="text" id="regAddress" class="form-control" placeholder="House #12, Road #3, Mojompur" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password (Min. 6 Characters) *</label>
+                        <input type="password" id="regPassword" class="form-control" required minlength="6" placeholder="••••••••" />
+                    </div>
+
+                    <button type="submit" id="authRegisterSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 14px; margin-top: 10px;">
+                        Complete Registration
+                    </button>
+                </form>
+
+                <!-- LOGIN FORM -->
+                <form id="authLoginForm" style="display: none;" onsubmit="window.craveApp.handleLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">Mobile Number or Email *</label>
+                        <input type="text" id="loginId" class="form-control" required placeholder="017XXXXXXXX or email@domain.com" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password *</label>
+                        <input type="password" id="loginPassword" class="form-control" required placeholder="••••••••" />
+                    </div>
+
+                    <button type="submit" id="authLoginSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 14px; margin-top: 10px;">
+                        Sign In
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
