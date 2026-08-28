@@ -7,12 +7,25 @@ use Illuminate\Support\Facades\Route;
 
 // Main Single Page Food Delivery Interface
 Route::get('/', [FoodController::class, 'index'])->name('home');
+
+// Orders Pages
 Route::get('/order', [OrderController::class, 'orderPage'])->name('order.page');
+Route::get('/orders-bn', [OrderController::class, 'orderPageBn'])->name('order.bn');
+Route::get('/order-bn', [OrderController::class, 'orderPageBn']);
+
+// Contact Us Pages
 Route::get('/contact-us', function () {
     return view('contact');
 })->name('contact.page');
 
-// Contact Form Submission
+Route::get('/contact-bn', function () {
+    return view('contact_bn');
+})->name('contact.bn');
+Route::get('/jogajog', function () {
+    return view('contact_bn');
+});
+
+// Contact Form Submission API
 Route::post('/api/contact/submit', function (Request $request) {
     $validated = $request->validate([
         'name' => 'required|string|max:100',

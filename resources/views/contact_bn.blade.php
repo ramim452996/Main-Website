@@ -1,20 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="bn" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Contact Us & Customer Support • KushtiaExpress</title>
-    <meta name="description" content="Contact KushtiaExpress 24/7 helpline, Mojompur Gate head office, bKash merchant support, and customer care in Kushtia, Bangladesh.">
+    <title>যোগাযোগ ও হেল্পডেস্ক (Contact Us) • কুষ্টিয়া এক্সপ্রেস</title>
+    <meta name="description" content="কুষ্টিয়া এক্সপ্রেসের ২৪/৭ হেল্পলাইন, মজমুপুর গেট হেড অফিস, বিকাশ মার্চেন্ট সাপোর্ট এবং কাস্টমার কেয়ারের সাথে সরাসরি যোগাযোগ করুন।">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
+        body, button, input, select, textarea {
+            font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif;
+        }
+        h1, h2, h3, h4, h5, h6, .brand-logo, .food-price {
+            font-family: 'Outfit', 'Hind Siliguri', sans-serif;
+        }
         .contact-hero {
             padding: 60px 0 50px;
             background: linear-gradient(180deg, var(--bg-surface-2) 0%, var(--bg-body) 100%);
@@ -120,16 +126,16 @@
             </a>
 
             <ul class="nav-links">
-                <li><a href="{{ route('home') }}" class="nav-link">Home</a></li>
-                <li><a href="{{ route('home') }}#menu-catalog" class="nav-link">Menu</a></li>
-                <li><a href="{{ route('order.page') }}" class="nav-link">Orders</a></li>
-                <li><a href="{{ route('contact.page') }}" class="nav-link active">Contact Us</a></li>
+                <li><a href="{{ route('home') }}" class="nav-link">হোমপেজ</a></li>
+                <li><a href="{{ route('home') }}#menu-catalog" class="nav-link">খাবারের মেনু</a></li>
+                <li><a href="{{ route('order.bn') }}" class="nav-link">অর্ডার ট্র্যাকিং (বাংলা)</a></li>
+                <li><a href="{{ route('contact.bn') }}" class="nav-link active">যোগাযোগ (বাংলা)</a></li>
             </ul>
 
             <div class="nav-actions">
-                <!-- Bengali Page Switcher -->
-                <a href="{{ route('contact.bn') }}" class="lang-switch-badge" title="বাংলা ভার্সনে দেখুন (Switch to Bengali)">
-                    <span>🇧🇩 বাংলা ভার্সন</span>
+                <!-- English Page Switcher -->
+                <a href="{{ route('contact.page') }}" class="lang-switch-badge" title="Switch to English Contact Us">
+                    <span>🇬🇧 English</span>
                 </a>
 
                 <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Theme">
@@ -138,24 +144,24 @@
 
                 <button id="cartDrawerTrigger" class="cart-btn-trigger">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                    <span>Cart</span>
+                    <span>কার্ট</span>
                     <span id="navCartCount" class="cart-badge-count" style="display: none;">0</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- CONTACT HERO (ENGLISH) -->
+    <!-- CONTACT HERO (BENGALI) -->
     <section class="contact-hero">
         <div class="container" style="max-width: 800px;">
             <div class="hero-badge-pill" style="margin-bottom: 16px;">
-                <span>💬 24/7 Kushtia Customer Support & Helpdesk</span>
+                <span>💬 ২৪/৭ কুষ্টিয়া কাস্টমার সাপোর্ট ও হেল্পডেস্ক</span>
             </div>
             <h1 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 16px;">
-                We are always here to <span class="gradient-text">help you</span>
+                আমরা সবসময় আপনার <span class="gradient-text">পাশে আছি</span>
             </h1>
             <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6;">
-                Need help with an ongoing food order, live rider tracking, bKash / Nagad payments, or restaurant partnership in Kushtia? Get in touch with our team anytime.
+                খাবার অর্ডার, রাইডার ট্র্যাকিং, বিকাশ/নগদ পেমেন্ট অথবা রেস্তোরাঁ পার্টনারশিপ সংক্রান্ত যেকোনো প্রয়োজনে আমাদের কুষ্টিয়া অফিসে যোগাযোগ করুন।
             </p>
         </div>
     </section>
@@ -166,41 +172,41 @@
             <div class="contact-grid">
                 <!-- Contact Form Card -->
                 <div class="contact-card">
-                    <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 8px;">Send us a message</h2>
+                    <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 8px;">সরাসরি বার্তা পাঠান</h2>
                     <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px;">
-                        Fill out the form below and our Kushtia support team will get back to you promptly.
+                        নিচের ফরমটি পূরণ করুন, আমাদের সাপোর্ট টিম দ্রুততম সময়ে আপনার সাথে যোগাযোগ করবে।
                     </p>
 
                     <form id="contactUsForm">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
                             <div class="form-group" style="margin: 0;">
-                                <label class="form-label">Full Name *</label>
-                                <input type="text" id="cntName" class="form-control" required placeholder="John Doe" />
+                                <label class="form-label">আপনার পূর্ণ নাম *</label>
+                                <input type="text" id="cntName" class="form-control" required placeholder="মোঃ শফিকুল ইসলাম" />
                             </div>
                             <div class="form-group" style="margin: 0;">
-                                <label class="form-label">Mobile Number *</label>
-                                <input type="tel" id="cntPhone" class="form-control" required placeholder="+880 17XXXXXXXX" />
+                                <label class="form-label">মোবাইল নম্বর *</label>
+                                <input type="tel" id="cntPhone" class="form-control" required placeholder="017XXXXXXXX" />
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Subject / Inquiry Type *</label>
+                            <label class="form-label">বিষয় / অনুসন্ধানের ধরন *</label>
                             <select id="cntSubject" class="form-control" style="cursor: pointer;">
-                                <option value="Order & Delivery Inquiry">Order & Delivery Inquiry</option>
-                                <option value="bKash / Nagad Payment Assistance">bKash / Nagad Payment Assistance</option>
-                                <option value="Event & Bulk Catering Booking">Event & Bulk Catering Booking</option>
-                                <option value="Join as Restaurant Partner or Rider">Join as Restaurant Partner or Rider</option>
-                                <option value="Feedback & Suggestions">Feedback & Suggestions</option>
+                                <option value="অর্ডার ও ডেলিভারি সংক্রান্ত">অর্ডার ও ডেলিভারি সংক্রান্ত অনুসন্ধান</option>
+                                <option value="বিকাশ / নগদ পেমেন্ট হেল্প">বিকাশ / নগদ পেমেন্ট সংক্রান্ত সহায়তা</option>
+                                <option value="অনুষ্ঠান ও বাল্ক ক্যাটারিং বুকিং">বিয়ে/অনুষ্ঠানের বড় ক্যাটারিং অর্ডার</option>
+                                <option value="রেস্তোরাঁ বা রাইডার হিসেবে যোগ দিন">রেস্তোরাঁ পার্টনারশিপ বা রাইডার হিসেবে জয়েন</option>
+                                <option value="অন্যান্য পরামর্শ ও অভিযোগ">অন্যান্য মতামত ও অভিযোগ</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Your Message *</label>
-                            <textarea id="cntMessage" class="form-control" rows="4" required placeholder="Write your message here..."></textarea>
+                            <label class="form-label">আপনার বার্তা বা মন্তব্য *</label>
+                            <textarea id="cntMessage" class="form-control" rows="4" required placeholder="আপনার জিজ্ঞাসা বিস্তারিতভাবে লিখুন..."></textarea>
                         </div>
 
                         <button type="submit" id="cntSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 14px;">
-                            <span>Send Message</span>
+                            <span>বার্তা প্রেরণ করুন</span>
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                         </button>
                     </form>
@@ -208,7 +214,7 @@
 
                 <!-- Kushtia Hubs & Helpline Info -->
                 <div>
-                    <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 20px;">Kushtia Offices & Dispatch Hubs</h2>
+                    <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 20px;">কুষ্টিয়া অফিস ও হাবসমূহ</h2>
 
                     <!-- Central Hub -->
                     <div class="hub-card">
@@ -216,12 +222,12 @@
                             🏢
                         </div>
                         <div>
-                            <h3 style="font-weight: 800; font-size: 1.1rem; margin-bottom: 4px;">Central Kushtia Headquarters</h3>
+                            <h3 style="font-weight: 800; font-size: 1.1rem; margin-bottom: 4px;">সেন্ট্রাল কুষ্টিয়া হেডকোয়ার্টার</h3>
                             <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 6px;">
-                                2nd Floor, NS Road, Mojompur Gate Intersection, Kushtia Sadar - 7600
+                                ২য় তলা, এনএস রোড, মজমুপুর গেট মোড়, কুষ্টিয়া সদর - ৭৬০০
                             </p>
                             <div style="font-size: 0.85rem; font-weight: 700; color: var(--brand-primary);">
-                                📞 Helpline: +880 1712-345678
+                                📞 হেল্পলাইন: +৮৮০ ১৭১২-৩৪৫৬৭৮
                             </div>
                         </div>
                     </div>
@@ -232,12 +238,12 @@
                             🎓
                         </div>
                         <div>
-                            <h3 style="font-weight: 800; font-size: 1.1rem; margin-bottom: 4px;">Islamic University (IU) Campus Point</h3>
+                            <h3 style="font-weight: 800; font-size: 1.1rem; margin-bottom: 4px;">ইসলামী বিশ্ববিদ্যালয় (IU) ক্যাম্পাস পয়েন্ট</h3>
                             <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 6px;">
-                                Adjacent to Main Gate, Shantidanga, Islamic University, Kushtia
+                                মেইন গেট সংলগ্ন, শান্তিডাঙ্গা, ইসলামী বিশ্ববিদ্যালয়, কুষ্টিয়া
                             </p>
                             <div style="font-size: 0.85rem; font-weight: 700; color: #10B981;">
-                                🛵 Campus Express Rider Unit
+                                🛵 ক্যাম্পাস এক্সপ্রেস রাইডার ইউনিট
                             </div>
                         </div>
                     </div>
@@ -248,12 +254,12 @@
                             🌉
                         </div>
                         <div>
-                            <h3 style="font-weight: 800; font-size: 1.1rem; margin-bottom: 4px;">Chourhas & Gorai Express Hub</h3>
+                            <h3 style="font-weight: 800; font-size: 1.1rem; margin-bottom: 4px;">চৌড়হাস ও গড়াই এক্সপ্রেস হাব</h3>
                             <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 6px;">
-                                Chourhas Intersection, East side of Gorai Bridge, Kushtia
+                                চৌড়হাস মোড়, গড়াই ব্রিজের পূর্ব পাশ, কুষ্টিয়া
                             </p>
                             <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-main);">
-                                🕒 24/7 Rider Patrol Service
+                                🕒 ২৪ ঘণ্টা রাইডার পেট্রোল সার্ভিস
                             </div>
                         </div>
                     </div>
@@ -261,11 +267,11 @@
                     <!-- Instant WhatsApp Hotline Card -->
                     <div style="background: linear-gradient(135deg, #128C7E 0%, #075E54 100%); color: #FFFFFF; border-radius: 18px; padding: 24px; display: flex; align-items: center; justify-content: space-between;">
                         <div>
-                            <div style="font-weight: 800; font-size: 1.15rem; margin-bottom: 4px;">Chat Directly on WhatsApp</div>
-                            <div style="font-size: 0.85rem; opacity: 0.9;">For urgent order support and instant tracking</div>
+                            <div style="font-weight: 800; font-size: 1.15rem; margin-bottom: 4px;">সরাসরি হোয়াটসঅ্যাপে কথা বলুন</div>
+                            <div style="font-size: 0.85rem; opacity: 0.9;">জরুরি অর্ডার ট্র্যাক করতে বা ইনস্ট্যান্ট সাপোর্টের জন্য</div>
                         </div>
                         <a href="https://wa.me/8801712345678" target="_blank" class="btn" style="background: #FFFFFF; color: #075E54; font-weight: 800; padding: 10px 18px;">
-                            Chat Now 💬
+                            চ্যাট করুন 💬
                         </a>
                     </div>
                 </div>
@@ -274,47 +280,47 @@
             <!-- FREQUENTLY ASKED QUESTIONS (FAQ) -->
             <div style="margin-top: 60px; max-width: 860px; margin-left: auto; margin-right: auto;">
                 <div class="section-header">
-                    <div class="section-subtitle">Common Questions</div>
-                    <h2 class="section-title">Frequently Asked Questions (FAQ)</h2>
+                    <div class="section-subtitle">সাধারণ প্রশ্নোত্তর</div>
+                    <h2 class="section-title">সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)</h2>
                 </div>
 
                 <div class="faq-card open">
                     <div class="faq-header" onclick="this.parentElement.classList.toggle('open')">
-                        <span>1. Which areas in Kushtia do you deliver to?</span>
+                        <span>১. কুষ্টিয়া শহরের কোন কোন এলাকায় আপনারা খাবার ডেলিভারি দেন?</span>
                         <span>▼</span>
                     </div>
                     <div class="faq-content">
-                        We deliver to all areas of Kushtia Municipality (Mojompur, Court Para, Thana Mor, NS Road, Siraj Ud-Daula Road, Milpara, Boro Bazar, Housing Estate) as well as Chourhas, Gorai Bridge area, and Islamic University (IU) campus.
+                        আমরা কুষ্টিয়া পৌরসভার সকল ওয়ার্ড (মজমুপুর, কোর্টপাড়া, থানা মোড়, এনএস রোড, সিরাজ উদ-দৌলা রোড, মিলপাড়া, বড় বাজার, হাউজিং এস্টেট) সহ চৌড়হাস, গড়াই ব্রিজ সংলগ্ন এলাকা এবং ইসলামী বিশ্ববিদ্যালয় (IU) ক্যাম্পাসে নিয়মিত এক্সপ্রেস ডেলিভারি দিয়ে থাকি।
                     </div>
                 </div>
 
                 <div class="faq-card">
                     <div class="faq-header" onclick="this.parentElement.classList.toggle('open')">
-                        <span>2. What is the average delivery time?</span>
+                        <span>২. খাবার পৌঁছাতে গড়ে কত সময় লাগে?</span>
                         <span>▼</span>
                     </div>
                     <div class="faq-content">
-                        Within Kushtia municipal limits, the average delivery time is 15 to 20 minutes. For areas like Islamic University campus, it takes 25 to 30 minutes.
+                        কুষ্টিয়া পৌরসভা এলাকায় গড় ডেলিভারি সময় ১৫ থেকে ২০ মিনিট। দূরবর্তী এলাকা যেমন ইসলামী বিশ্ববিদ্যালয় ক্যাম্পাসে ২৫ থেকে ৩০ মিনিট সময় লাগতে পারে।
                     </div>
                 </div>
 
                 <div class="faq-card">
                     <div class="faq-header" onclick="this.parentElement.classList.toggle('open')">
-                        <span>3. How do I pay using bKash or Nagad?</span>
+                        <span>৩. বিকাশ বা নগদে পেমেন্ট করার নিয়ম কী?</span>
                         <span>▼</span>
                     </div>
                     <div class="faq-content">
-                        During checkout, select bKash or Nagad to complete a cashless online payment or pay the rider directly upon arrival.
+                        চেকআউট করার সময় পেমেন্ট অপশন হিসেবে বিকাশ (bKash) বা নগদ (Nagad) সিলেক্ট করে সরাসরি অনলাইনে অথবা খাবার হাতে পেয়ে রাইডারের পার্সোনাল/মার্চেন্ট নম্বরে ক্যাশলেস পেমেন্ট সম্পন্ন করতে পারবেন।
                     </div>
                 </div>
 
                 <div class="faq-card">
                     <div class="faq-header" onclick="this.parentElement.classList.toggle('open')">
-                        <span>4. Will Kushtia's famous Kulfi Malai melt during delivery?</span>
+                        <span>৪. কুষ্টিয়ার ঐতিহ্যবাহী কুলফি মালাই কি গলে যাওয়ার সম্ভাবনা আছে?</span>
                         <span>▼</span>
                     </div>
                     <div class="faq-content">
-                        Not at all! Our express couriers use specialized dry-ice thermal containers to ensure kulfis arrive 100% frozen and fresh.
+                        একদমই না! কুষ্টিয়া এক্সপ্রেসের রাইডাররা বিশেষায়িত ড্রাই-আইস থার্মাল বক্স ব্যবহার করে, যাতে প্রচণ্ড গরমেও কুলফি মালাই শতভাগ জমাট ও ঠাণ্ডা থাকে।
                     </div>
                 </div>
             </div>
@@ -325,11 +331,11 @@
     <footer class="site-footer">
         <div class="container">
             <div class="footer-bottom" style="border: none; padding: 0;">
-                <div>© {{ date('Y') }} KushtiaExpress • All rights reserved • Kushtia, Bangladesh</div>
+                <div>© {{ date('Y') }} KushtiaExpress • সর্বস্বত্ব সংরক্ষিত • কুষ্টিয়া, বাংলাদেশ</div>
                 <div style="display: flex; gap: 18px;">
-                    <a href="{{ route('home') }}">Home</a>
-                    <a href="{{ route('order.page') }}">Order Tracking</a>
-                    <a href="{{ route('contact.bn') }}">বাংলা সংস্করণ</a>
+                    <a href="{{ route('home') }}">হোমপেজ</a>
+                    <a href="{{ route('order.bn') }}">অর্ডার ট্র্যাকিং (বাংলা)</a>
+                    <a href="{{ route('contact.page') }}">English Version</a>
                 </div>
             </div>
         </div>
@@ -340,23 +346,23 @@
     <div id="cartDrawer" class="cart-drawer">
         <div class="drawer-header">
             <div class="drawer-title">
-                <span>Your Food Cart</span>
+                <span>আপনার খাবারের কার্ট</span>
             </div>
             <button id="cartDrawerClose" class="btn-icon">✕</button>
         </div>
         <div class="delivery-meter-box">
-            <div id="deliveryProgressText">Add <strong>৳400</strong> more for <strong>FREE Delivery</strong></div>
+            <div id="deliveryProgressText">আর মাত্র <strong>৳৪০০</strong> অর্ডারে পাচ্ছেন <strong>ফ্রি হোম ডেলিভারি</strong></div>
             <div class="progress-bar-bg"><div id="deliveryProgressFill" class="progress-bar-fill"></div></div>
         </div>
         <div id="cartItemsList" class="cart-items-list"></div>
         <div class="cart-drawer-footer">
             <div class="cart-summary-rows">
-                <div class="summary-row"><span>Subtotal</span><span id="cartSubtotal">৳0</span></div>
-                <div class="summary-row"><span>Delivery Fee</span><span id="cartDeliveryFee">৳40</span></div>
-                <div class="summary-row total"><span>Total</span><span id="cartTotal" class="gradient-text">৳0</span></div>
+                <div class="summary-row"><span>মোট মূল্য</span><span id="cartSubtotal">৳০</span></div>
+                <div class="summary-row"><span>ডেলিভারি চার্জ</span><span id="cartDeliveryFee">৳৪০</span></div>
+                <div class="summary-row total"><span>সর্বমোট</span><span id="cartTotal" class="gradient-text">৳০</span></div>
             </div>
             <button id="proceedCheckoutBtn" class="btn btn-primary" style="width: 100%; padding: 14px;" onclick="window.location.href='{{ route('home') }}'">
-                Go to Menu & Order
+                অর্ডার করতে মেনুতে যান
             </button>
         </div>
     </div>
@@ -371,7 +377,7 @@
             e.preventDefault();
             const btn = document.getElementById('cntSubmitBtn');
             btn.disabled = true;
-            btn.innerText = 'Sending message...';
+            btn.innerText = 'বার্তা পাঠানো হচ্ছে...';
 
             const name = document.getElementById('cntName').value;
             const phone = document.getElementById('cntPhone').value;
@@ -390,17 +396,17 @@
 
                 const data = await res.json();
                 if (res.ok && data.status === 'success') {
-                    window.craveApp.showToast('Thank you! Your message has been received.', 'success');
+                    window.craveApp.showToast(data.message, 'success');
                     document.getElementById('contactUsForm').reset();
                 } else {
-                    window.craveApp.showToast('Failed to send message, please try again.', 'error');
+                    window.craveApp.showToast('বার্তা প্রেরণ ব্যর্থ হয়েছে, আবার চেষ্টা করুন।', 'error');
                 }
             } catch (err) {
-                window.craveApp.showToast('Thank you! Your message has been received.', 'success');
+                window.craveApp.showToast('ধন্যবাদ! আপনার বার্তাটি গৃহীত হয়েছে।', 'success');
                 document.getElementById('contactUsForm').reset();
             } finally {
                 btn.disabled = false;
-                btn.innerText = 'Send Message';
+                btn.innerText = 'বার্তা প্রেরণ করুন';
             }
         });
     </script>

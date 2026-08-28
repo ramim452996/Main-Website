@@ -58,8 +58,8 @@
                 <li><a href="#menu-catalog" class="nav-link">খাবারের মেনু</a></li>
                 <li><a href="#offers" class="nav-link">অফার</a></li>
                 <li><a href="#chef-spotlight" class="nav-link">কুষ্টিয়ার স্পেশাল</a></li>
-                <li><a href="{{ route('order.page') }}" class="nav-link">অর্ডার ট্র্যাকিং</a></li>
-                <li><a href="{{ route('contact.page') }}" class="nav-link">যোগাযোগ</a></li>
+                <li><a href="{{ route('order.bn') }}" class="nav-link">অর্ডার ট্র্যাকিং (বাংলা)</a></li>
+                <li><a href="{{ route('contact.bn') }}" class="nav-link">যোগাযোগ (বাংলা)</a></li>
             </ul>
 
             <!-- Actions (Theme Toggle, Active Order, Cart Trigger) -->
