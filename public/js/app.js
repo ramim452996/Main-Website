@@ -75,13 +75,6 @@ class CraveApp {
     initLang() {
         const savedLang = localStorage.getItem('kushtia_lang') || 'bn';
         this.setLanguage(savedLang, false);
-
-        document.querySelectorAll('.lang-toggle-btn, .lang-floating-switcher').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const nextLang = this.currentLang === 'bn' ? 'en' : 'bn';
-                this.setLanguage(nextLang, true);
-            });
-        });
     }
 
     toggleLanguage() {
@@ -102,6 +95,14 @@ class CraveApp {
             } else {
                 btn.innerHTML = `<span class="lang-flag">🇬🇧</span> <span class="lang-text">English</span> <span style="font-size:0.75rem; color:var(--text-muted);">| বাংলা</span>`;
                 btn.title = "বাংলায় পরিবর্তন করুন";
+            }
+        });
+
+        document.querySelectorAll('.lang-floating-switcher').forEach(btn => {
+            if (lang === 'bn') {
+                btn.innerHTML = `<span class="lang-flag">🌐</span> <span class="lang-text">বাংলা / English</span>`;
+            } else {
+                btn.innerHTML = `<span class="lang-flag">🌐</span> <span class="lang-text">English / বাংলা</span>`;
             }
         });
 
