@@ -236,10 +236,10 @@ class CraveApp {
             const t = el.innerText.trim();
             if (isBn) {
                 if (t.includes('Delicious') || t.includes('Choose')) el.innerText = 'পছন্দের সুস্বাদু খাবার বেছে নিন';
-                else if (t.includes('Why') || t.includes('KushtiaExpress')) el.innerText = 'কেন কুষ্টিয়া এক্সপ্রেস সেরা?';
+                else if (t.includes('Why') || t.includes('Kushtia Foodies') || t.includes('KushtiaExpress')) el.innerText = 'কেন কুষ্টিয়া ফুডিজ সেরা?';
             } else {
                 if (t.includes('পছন্দের সুস্বাদু')) el.innerText = 'Choose Your Favorite Dishes';
-                else if (t.includes('কেন কুষ্টিয়া')) el.innerText = 'Why KushtiaExpress is the Best?';
+                else if (t.includes('কেন কুষ্টিয়া')) el.innerText = 'Why Kushtia Foodies is the Best?';
             }
         });
     }

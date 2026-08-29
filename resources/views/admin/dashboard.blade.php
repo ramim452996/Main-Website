@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>অ্যাডমিন কন্ট্রোল প্যানেল (Admin Panel) • KushtiaExpress</title>
-    <meta name="description" content="কুষ্টিয়া এক্সপ্রেসের প্রশাসনিক ড্যাশবোর্ড - সকল অর্ডার, কাস্টমার, মেনু এবং আয়ের হিসাব দেখুন।">
+    <title>অ্যাডমিন কন্ট্রোল প্যানেল (Admin Panel) • Kushtia Foodies</title>
+    <meta name="description" content="কুষ্টিয়া ফুডিজের প্রশাসনিক ড্যাশবোর্ড - সকল অর্ডার, কাস্টমার, মেনু এবং আয়ের হিসাব দেখুন।">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -183,7 +183,7 @@
                     <div class="logo-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
                     </div>
-                    <span>Kushtia<span class="gradient-text">Admin</span></span>
+                    <span>Foodies<span class="gradient-text">Admin</span></span>
                 </a>
 
                 <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; padding-left: 12px;">
@@ -224,8 +224,8 @@
             <!-- Header Bar -->
             <div class="admin-header">
                 <div>
-                    <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 4px;">অ্যাডমিন কন্ট্রোল সেন্টার</h1>
-                    <p style="color: var(--text-muted); font-size: 0.95rem;">কুষ্টিয়া এক্সপ্রেসের সকল ডেলিভারি, কাস্টমার সাইন-আপ ও আয়ের লাইভ পরিসংখ্যান।</p>
+                    <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 4px;">কুষ্টিয়া ফুডিজ অ্যাডমিন সেন্টার</h1>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">কুষ্টিয়া ফুডিজের সকল ডেলিভারি, কাস্টমার সাইন-আপ ও আয়ের লাইভ পরিসংখ্যান।</p>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 12px;">
