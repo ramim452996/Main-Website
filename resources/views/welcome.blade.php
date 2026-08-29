@@ -65,7 +65,7 @@
             <!-- Actions (Language Switcher, Auth, Theme Toggle, Active Order, Cart Trigger) -->
             <div class="nav-actions">
                 <!-- Global Language Switcher Button (বাংলা ↔ English) -->
-                <button type="button" class="lang-toggle-btn" title="ভাষা পরিবর্তন করুন / Switch Language">
+                <button type="button" class="lang-toggle-btn" onclick="window.craveApp.toggleLanguage()" title="ভাষা পরিবর্তন করুন / Switch Language">
                     <span class="lang-flag">🇧🇩</span>
                     <span class="lang-text">বাংলা</span>
                     <span style="font-size:0.75rem; color:var(--text-muted);">| EN</span>
@@ -91,6 +91,9 @@
                         </div>
                         <a href="{{ route('order.bn') }}" class="auth-dropdown-item">
                             <span data-en="📦 My Orders" data-bn="📦 আমার অর্ডারসমূহ">📦 আমার অর্ডারসমূহ</span>
+                        </a>
+                        <a href="{{ route('admin.dashboard') }}" class="auth-dropdown-item" style="color: var(--brand-primary); font-weight: 700;">
+                            <span>⚙️ অ্যাডমিন প্যানেল (Admin)</span>
                         </a>
                         <a href="{{ route('contact.bn') }}" class="auth-dropdown-item">
                             <span data-en="💬 Help & Support" data-bn="💬 হেল্পডেস্ক ও সহায়তা">💬 হেল্পডেস্ক ও সহায়তা</span>
@@ -129,12 +132,12 @@
             <div class="hero-content">
                 <div class="hero-badge-pill">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                    <span>কুষ্টিয়া শহরে মাত্র ২০ মিনিটে দ্রুততম ফুড ডেলিভারি</span>
+                    <span data-en="⚡ Fastest 20-Min Express Food Delivery in Kushtia" data-bn="কুষ্টিয়া শহরে মাত্র ২০ মিনিটে দ্রুততম ফুড ডেলিভারি">কুষ্টিয়া শহরে মাত্র ২০ মিনিটে দ্রুততম ফুড ডেলিভারি</span>
                 </div>
-                <h1 class="hero-title">
+                <h1 class="hero-title" data-en="Authentic Taste of Kushtia <br/><span class='gradient-text'>At Your Doorstep.</span>" data-bn="কুষ্টিয়ার সেরা ঐতিহ্যবাহী স্বাদ আপনার <span class='gradient-text'>দরজায়।</span>">
                     কুষ্টিয়ার সেরা ঐতিহ্যবাহী স্বাদ আপনার <span class="gradient-text">দরজায়।</span>
                 </h1>
-                <p class="hero-subtitle">
+                <p class="hero-subtitle" data-en="From famous Kulfi Malai, Shahi Kacchi Biryani, fresh Gorai Ilish to crispy burgers— getting piping hot food delivered in minutes!" data-bn="বিখ্যাত কুলফি মালাই, শাহী কাচ্চি বিরিয়ানি, গড়াই নদীর টাটকা ইলিশ থেকে ক্রিস্পি বার্গার— কুষ্টিয়ার সেরা রেস্তোরাঁ থেকে গরম গরম খাবার পৌঁছে দিচ্ছি চোখের পলকে!">
                     বিখ্যাত কুলফি মালাই, শাহী কাচ্চি বিরিয়ানি, গড়াই নদীর টাটকা ইলিশ থেকে ক্রিস্পি বার্গার— কুষ্টিয়ার সেরা রেস্তোরাঁ থেকে গরম গরম খাবার পৌঁছে দিচ্ছি চোখের পলকে!
                 </p>
 
@@ -143,18 +146,18 @@
                     <div class="hero-search-icon">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                     </div>
-                    <input type="text" id="heroSearchInput" class="hero-search-input" placeholder="কুলফি মালাই, কাচ্চি বিরিয়ানি, কালা ভুনা, বার্গার, ইলিশ মাছ খুঁজুন..." />
-                    <button class="btn btn-primary" onclick="document.getElementById('menu-catalog').scrollIntoView({behavior: 'smooth'})">খাবার খুঁজুন</button>
+                    <input type="text" id="heroSearchInput" class="hero-search-input" placeholder="কুলফি মালাই, কাচ্চি বিরিয়ানি, কালা ভুনা, বার্গার, ইলিশ মাছ খুঁজুন..." data-placeholder-en="Search dishes (e.g. Kulfi, Biryani, Ilish, Burger)..." data-placeholder-bn="কুলফি মালাই, কাচ্চি বিরিয়ানি, কালা ভুনা, বার্গার, ইলিশ মাছ খুঁজুন..." />
+                    <button class="btn btn-primary" onclick="document.getElementById('menu-catalog').scrollIntoView({behavior: 'smooth'})" data-en="Search Food" data-bn="খাবার খুঁজুন">খাবার খুঁজুন</button>
                 </div>
 
                 <!-- Quick Category Shortcuts -->
                 <div class="hero-quick-tags">
-                    <span class="quick-tag-label">জনপ্রিয় খাবার:</span>
-                    <button class="quick-tag-btn" data-category="kushtia-heritage">🍨 কুষ্টিয়ার কুলফি মালাই</button>
-                    <button class="quick-tag-btn" data-category="biryani-polao">🍛 শাহী কাচ্চি বিরিয়ানি</button>
-                    <button class="quick-tag-btn" data-category="bengali-curry-fish">🐟 গড়াই নদীর ইলিশ</button>
-                    <button class="quick-tag-btn" data-category="bengali-curry-fish">🥩 গরুর কালা ভুনা</button>
-                    <button class="quick-tag-btn" data-category="street-snacks">🧆 স্পেশাল দই ফুচকা</button>
+                    <span class="quick-tag-label" data-en="Popular Items:" data-bn="জনপ্রিয় খাবার:">জনপ্রিয় খাবার:</span>
+                    <button class="quick-tag-btn" data-category="kushtia-heritage" data-en="🍨 Royal Kulfi Malai" data-bn="🍨 কুষ্টিয়ার কুলফি মালাই">🍨 কুষ্টিয়ার কুলফি মালাই</button>
+                    <button class="quick-tag-btn" data-category="biryani-polao" data-en="🍛 Shahi Kacchi Biryani" data-bn="🍛 শাহী কাচ্চি বিরিয়ানি">🍛 শাহী কাচ্চি বিরিয়ানি</button>
+                    <button class="quick-tag-btn" data-category="bengali-curry-fish" data-en="🐟 Fresh Gorai Ilish" data-bn="🐟 গড়াই নদীর ইলিশ">🐟 গড়াই নদীর ইলিশ</button>
+                    <button class="quick-tag-btn" data-category="bengali-curry-fish" data-en="🥩 Beef Kala Bhuna" data-bn="🥩 গরুর কালা ভুনা">🥩 গরুর কালা ভুনা</button>
+                    <button class="quick-tag-btn" data-category="street-snacks" data-en="🧆 Special Doi Fuchka" data-bn="🧆 স্পেশাল দই ফুচকা">🧆 স্পেশাল দই ফুচকা</button>
                 </div>
             </div>
 

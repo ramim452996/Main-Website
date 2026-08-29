@@ -939,7 +939,11 @@ class CraveApp {
         }
 
         const vat = (subtotal - discount) * 0.05;
-        document.getElementById('checkoutOrderSummaryTotal').innerText = `৳${total.toFixed(0)}`;
+        const total = Math.max(0, subtotal - discount + deliveryFee + vat);
+        const totalSummaryEl = document.getElementById('checkoutOrderSummaryTotal');
+        if (totalSummaryEl) {
+            totalSummaryEl.innerText = `৳${total.toFixed(0)}`;
+        }
 
         // Auto-fill customer details if logged in
         if (this.currentUser) {
@@ -957,21 +961,22 @@ class CraveApp {
     async submitOrder() {
         const form = document.getElementById('checkoutForm');
         const submitBtn = document.getElementById('submitOrderBtn');
-        if (!form || !submitBtn) return;
+        if (!submitBtn) return;
 
+        const isBn = this.currentLang === 'bn';
         submitBtn.disabled = true;
-        submitBtn.innerText = 'অর্ডার কনফার্ম করা হচ্ছে...';
+        submitBtn.innerText = isBn ? 'অর্ডার কনফার্ম করা হচ্ছে...' : 'Placing your order...';
 
-        const name = document.getElementById('custName').value;
-        const phone = document.getElementById('custPhone').value;
-        const address = document.getElementById('custAddress').value;
-        const notes = document.getElementById('custNotes').value;
-        const paymentMethod = document.getElementById('selectedPaymentMethod').value || 'bkash';
+        const name = document.getElementById('custName')?.value || 'Guest Customer';
+        const phone = document.getElementById('custPhone')?.value || '01700000000';
+        const address = document.getElementById('custAddress')?.value || 'Kushtia City';
+        const notes = document.getElementById('custNotes')?.value || '';
+        const paymentMethod = document.getElementById('selectedPaymentMethod')?.value || 'bkash';
 
         const payload = {
             customer_name: name,
             customer_phone: phone,
-            customer_email: 'customer@kushtia.com',
+            customer_email: this.currentUser?.email || 'customer@kushtia.com',
             delivery_address: address,
             notes: notes,
             payment_method: paymentMethod,
@@ -992,6 +997,7 @@ class CraveApp {
 
             const data = await res.json();
             if (res.ok && data.status === 'success') {
+                const orderCode = data.order.order_code;
                 this.cart = [];
                 this.appliedCoupon = null;
                 this.saveCart();
@@ -1004,23 +1010,17 @@ class CraveApp {
                 const trackBtn = document.getElementById('recentOrderTrackBtn');
                 if (trackBtn) trackBtn.style.display = 'inline-flex';
 
-                this.showToast('অর্ডার সফলভাবে সম্পন্ন হয়েছে!', 'success');
-                this.openTrackingModal(data.order.order_code);
+                this.showToast(isBn ? `অর্ডার #${orderCode} সফলভাবে কনফার্ম হয়েছে!` : `Order #${orderCode} placed successfully!`, 'success');
+                this.openTrackingModal(orderCode);
             } else {
-                this.showToast(data.message || 'অর্ডার করতে সমস্যা হয়েছে।', 'error');
+                this.showToast(data.message || (isBn ? 'অর্ডার সম্পন্ন হতে সমস্যা হয়েছে।' : 'Failed to place order.'), 'error');
             }
         } catch (err) {
             console.error('Order submission error:', err);
-            const mockCode = 'KUS-' + Math.floor(100000 + Math.random() * 900000);
-            this.cart = [];
-            this.appliedCoupon = null;
-            this.saveCart();
-            this.renderCart();
-            this.closeModal('checkoutModal');
-            this.openTrackingModal(mockCode);
+            this.showToast(isBn ? 'সার্ভার সংযোগ সমস্যা। অনুগ্রহ করে আবার চেষ্টা করুন।' : 'Connection error. Please try again.', 'error');
         } finally {
             submitBtn.disabled = false;
-            submitBtn.innerText = 'অর্ডার কনফার্ম করুন (Confirm Order)';
+            submitBtn.innerText = isBn ? 'অর্ডার কনফার্ম করুন (Confirm Order)' : 'Confirm Order 🚀';
         }
     }
 

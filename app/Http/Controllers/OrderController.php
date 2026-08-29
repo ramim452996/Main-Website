@@ -54,7 +54,7 @@ class OrderController extends Controller
             'customer_email' => 'nullable|email|max:100',
             'delivery_address' => 'required|string|max:255',
             'notes' => 'nullable|string|max:500',
-            'payment_method' => 'required|string|in:bkash,nagad,rocket,cash',
+            'payment_method' => 'required|string|in:bkash,nagad,rocket,cash,cod,card',
             'items' => 'required|array|min:1',
             'items.*.id' => 'required|integer',
             'items.*.name' => 'required|string',

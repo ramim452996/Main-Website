@@ -154,7 +154,7 @@
                 </a>
                 <div style="display: flex; align-items: center; gap: 8px;">
                     <!-- Global Language Switcher -->
-                    <button type="button" class="lang-toggle-btn" title="Switch Language / ভাষা পরিবর্তন">
+                    <button type="button" class="lang-toggle-btn" onclick="window.craveApp.toggleLanguage()" title="Switch Language / ভাষা পরিবর্তন">
                         <span class="lang-flag">🇧🇩</span>
                         <span class="lang-text">বাংলা</span>
                         <span style="font-size:0.75rem; color:var(--text-muted);">| EN</span>

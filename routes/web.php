@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\OrderController;
@@ -8,6 +9,14 @@ use Illuminate\Support\Facades\Route;
 
 // Main Single Page Food Delivery Interface
 Route::get('/', [FoodController::class, 'index'])->name('home');
+
+// Admin Panel Dashboard & APIs
+Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+Route::get('/admin/dashboard', [AdminController::class, 'index']);
+Route::get('/api/admin/stats', [AdminController::class, 'getStats']);
+Route::get('/api/admin/orders', [AdminController::class, 'getOrders']);
+Route::post('/api/admin/orders/{id}/status', [AdminController::class, 'updateOrderStatus']);
+Route::get('/api/admin/customers', [AdminController::class, 'getCustomers']);
 
 // Orders Pages
 Route::get('/order', [OrderController::class, 'orderPage'])->name('order.page');

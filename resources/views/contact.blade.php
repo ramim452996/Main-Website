@@ -128,7 +128,7 @@
 
             <div class="nav-actions">
                 <!-- Global Language Switcher Button (বাংলা ↔ English) -->
-                <button type="button" class="lang-toggle-btn" title="Switch Language / ভাষা পরিবর্তন">
+                <button type="button" class="lang-toggle-btn" onclick="window.craveApp.toggleLanguage()" title="Switch Language / ভাষা পরিবর্তন">
                     <span class="lang-flag">🇬🇧</span>
                     <span class="lang-text">English</span>
                     <span style="font-size:0.75rem; color:var(--text-muted);">| বাংলা</span>
@@ -154,6 +154,9 @@
                         </div>
                         <a href="{{ route('order.page') }}" class="auth-dropdown-item">
                             <span>📦 My Orders</span>
+                        </a>
+                        <a href="{{ route('admin.dashboard') }}" class="auth-dropdown-item" style="color: var(--brand-primary); font-weight: 700;">
+                            <span>⚙️ Admin Panel</span>
                         </a>
                         <a href="{{ route('contact.page') }}" class="auth-dropdown-item">
                             <span>💬 Support & Helpdesk</span>
