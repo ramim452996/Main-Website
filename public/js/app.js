@@ -105,15 +105,13 @@ class CraveApp {
             }
         });
 
-        // Translate the whole DOM
+        // Translate the whole DOM & all food items
         this.translateDOM();
+        this.translateFoodCards();
 
         // Re-render dynamic components
         this.renderCart();
         this.renderAuthUI();
-        if (typeof this.fetchFoodItems === 'function') {
-            this.fetchFoodItems();
-        }
 
         if (showToast) {
             this.showToast(lang === 'bn' ? '🇧🇩 ভাষা পরিবর্তন করা হয়েছে: বাংলা' : '🇬🇧 Language switched to: English', 'brand');
@@ -137,7 +135,7 @@ class CraveApp {
             el.innerHTML = isBn ? el.getAttribute('data-bn') : el.getAttribute('data-en');
         });
 
-        // 3. Placeholders with data-i18n-placeholder
+        // 3. Placeholders with data-i18n-placeholder / data-placeholder-en
         document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
             const key = el.getAttribute('data-i18n-placeholder');
             if (dict[key]) {
@@ -146,6 +144,167 @@ class CraveApp {
         });
         document.querySelectorAll('[data-placeholder-en][data-placeholder-bn]').forEach(el => {
             el.placeholder = isBn ? el.getAttribute('data-placeholder-bn') : el.getAttribute('data-placeholder-en');
+        });
+
+        // 4. Translate Navbar Links dynamically
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            const text = link.innerText.trim();
+            if (isBn) {
+                if (text === 'Home') link.innerText = 'হোমপেজ';
+                else if (text === 'Food Menu' || text === 'Menu') link.innerText = 'খাবারের মেনু';
+                else if (text === 'Orders' || text === 'Order Tracking') link.innerText = 'অর্ডার ট্র্যাকিং';
+                else if (text === 'Contact Us' || text === 'Contact') link.innerText = 'যোগাযোগ';
+                else if (text === 'Special Offers') link.innerText = 'অফার';
+                else if (text === 'Kushtia Specials') link.innerText = 'কুষ্টিয়ার স্পেশাল';
+            } else {
+                if (text === 'হোমপেজ') link.innerText = 'Home';
+                else if (text === 'খাবারের মেনু' || text === 'মেনু') link.innerText = 'Food Menu';
+                else if (text === 'অর্ডার ট্র্যাকিং' || text === 'অর্ডারসমূহ') link.innerText = 'Order Tracking';
+                else if (text === 'যোগাযোগ' || text === 'হেল্পডেস্ক') link.innerText = 'Contact Us';
+                else if (text === 'অফার') link.innerText = 'Special Offers';
+                else if (text === 'কুষ্টিয়ার স্পেশাল') link.innerText = 'Kushtia Specials';
+            }
+        });
+
+        // 5. Translate Category Tabs
+        document.querySelectorAll('.category-tab-btn').forEach(btn => {
+            const slug = btn.getAttribute('data-slug');
+            const countEl = btn.querySelector('.cat-count');
+            const count = countEl ? countEl.innerText : '';
+            let label = '';
+            if (isBn) {
+                if (slug === 'all') label = '🌟 সকল খাবার (All)';
+                else if (slug === 'kushtia-heritage') label = '🍨 কুষ্টিয়া হেরিটেজ ও কুলফি';
+                else if (slug === 'biryani-polao') label = '🍛 বিরিয়ানি ও রাইস মিলস';
+                else if (slug === 'bengali-curry-fish') label = '🐟 বাংলা কারি ও গড়াইয়ের মাছ';
+                else if (slug === 'street-snacks') label = '🧆 স্ট্রিট ফুড ও স্ন্যাক্স';
+                else if (slug === 'sweets-desserts') label = '🍯 ঐতিহ্যবাহী মিষ্টি ও ক্ষীর';
+                else if (slug === 'beverages-tea') label = '☕ চা ও স্পেশাল পানীয়';
+            } else {
+                if (slug === 'all') label = '🌟 All Items (সকল)';
+                else if (slug === 'kushtia-heritage') label = '🍨 Kushtia Heritage & Kulfi';
+                else if (slug === 'biryani-polao') label = '🍛 Biryani & Rice Meals';
+                else if (slug === 'bengali-curry-fish') label = '🐟 Bengali Curry & Fish';
+                else if (slug === 'street-snacks') label = '🧆 Street Food & Snacks';
+                else if (slug === 'sweets-desserts') label = '🍯 Sweets & Desserts';
+                else if (slug === 'beverages-tea') label = '☕ Beverages & Tea';
+            }
+            if (label) {
+                btn.innerHTML = `<span>${label}</span> <span class="cat-count">${count}</span>`;
+            }
+        });
+
+        // 6. Translate Filter Pills
+        document.querySelectorAll('.filter-pill').forEach(pill => {
+            const filter = pill.getAttribute('data-filter');
+            if (isBn) {
+                if (filter === 'vegetarian') pill.innerText = '🌱 নিরামিষ (Veg)';
+                else if (filter === 'spicy') pill.innerText = '🌶️ স্পাইসি / ঝাল';
+                else if (filter === 'chef_special') pill.innerText = '👨‍🍳 কুষ্টিয়া স্পেশাল';
+            } else {
+                if (filter === 'vegetarian') pill.innerText = '🌱 Vegetarian (Veg)';
+                else if (filter === 'spicy') pill.innerText = '🌶️ Spicy Delights';
+                else if (filter === 'chef_special') pill.innerText = "👨‍🍳 Chef's Special";
+            }
+        });
+
+        // 7. Translate Sort Select options
+        const sortSelect = document.getElementById('sortSelect');
+        if (sortSelect) {
+            sortSelect.options[0].text = isBn ? 'জনপ্রিয়তার ভিত্তিতে' : 'Most Popular';
+            sortSelect.options[1].text = isBn ? 'সর্বোচ্চ রেটিং (★ 4.9+)' : 'Highest Rated (★ 4.9+)';
+            sortSelect.options[2].text = isBn ? 'কম দাম থেকে বেশি' : 'Price: Low to High';
+            sortSelect.options[3].text = isBn ? 'বেশি দাম থেকে কম' : 'Price: High to Low';
+            sortSelect.options[4].text = isBn ? 'দ্রুততম সময়ে প্রস্তুত' : 'Fastest Prep Time';
+        }
+
+        // 8. Translate Section Headers
+        document.querySelectorAll('.section-subtitle').forEach(el => {
+            const t = el.innerText.trim();
+            if (isBn) {
+                if (t.includes('Best Menu') || t.includes('OUR MENU')) el.innerText = 'কুষ্টিয়ার সেরা মেনু';
+                else if (t.includes('WHY CHOOSE') || t.includes('FEATURES')) el.innerText = 'আমাদের বিশেষত্ব';
+            } else {
+                if (t.includes('সেরা মেনু')) el.innerText = 'KUSHTIA BEST MENU';
+                else if (t.includes('বিশেষত্ব')) el.innerText = 'WHY CHOOSE US';
+            }
+        });
+
+        document.querySelectorAll('.section-title').forEach(el => {
+            const t = el.innerText.trim();
+            if (isBn) {
+                if (t.includes('Delicious') || t.includes('Choose')) el.innerText = 'পছন্দের সুস্বাদু খাবার বেছে নিন';
+                else if (t.includes('Why') || t.includes('KushtiaExpress')) el.innerText = 'কেন কুষ্টিয়া এক্সপ্রেস সেরা?';
+            } else {
+                if (t.includes('পছন্দের সুস্বাদু')) el.innerText = 'Choose Your Favorite Dishes';
+                else if (t.includes('কেন কুষ্টিয়া')) el.innerText = 'Why KushtiaExpress is the Best?';
+            }
+        });
+    }
+
+    translateFoodCards() {
+        const isBn = this.currentLang === 'bn';
+        const cardDictionary = {
+            1: {
+                en: { name: "Kushtia Royal Shahi Kulfi Malai", desc: "Century-old authentic recipe with thick milk cream, saffron, pistachio & cashew nuts.", prep: "5-10 mins" },
+                bn: { name: "কুষ্টিয়ার বিখ্যাত রয়্যাল শাহী কুলফি মালাই", desc: "শতবর্ষের প্রাচীন রেসিপিতে খাঁটি ঘন দুধের ক্ষীর, জাফরান, পেস্তা ও কাজুবাদামের কুচি মিশিয়ে তৈরি।", prep: "৫-১০ মিনিট" }
+            },
+            2: {
+                en: { name: "Shahi Kacchi Biryani (Basmati & Mutton)", desc: "Aromatic basmati rice cooked with tender mutton chunks, alu bukhara, saffron and pure ghee.", prep: "15-20 mins" },
+                bn: { name: "শাহী মাটন কাচ্চি বিরিয়ানি (বাসমতি)", desc: "সুগন্ধি বাসমতি চাল, নরম খাসির মাংস, আলু বোখারা, জাফরান ও খাঁটি গাওয়া ঘিয়ে দম দেওয়া কাচ্চি।", prep: "১৫-২০ মিনিট" }
+            },
+            3: {
+                en: { name: "Gorai River Fresh Ilish Sorshe Curry", desc: "Fresh Hilsa fish from River Gorai cooked in traditional mustard gravy with green chillies.", prep: "20-25 mins" },
+                bn: { name: "গড়াই নদীর খাঁটি সর্ষে ইলিশ কারি", desc: "কুষ্টিয়ার গড়াই নদীর টাটকা ইলিশ মাছ, খাঁটি সরিষার বাটা ও কাঁচা মরিচের ঝাঁজে তৈরি স্পেশাল কারি।", prep: "২০-২৫ মিনিট" }
+            },
+            4: {
+                en: { name: "Traditional Beef Kala Bhuna", desc: "Slow-roasted tender beef chunks in rich aromatic spices and caramelized onion gravy.", prep: "15-20 mins" },
+                bn: { name: "ঐতিহ্যবাহী গরুর কালা ভুনা", desc: "খাস দেশি মশলা ও পেঁয়াজ বেরেস্তায় ঘণ্টার পর ঘণ্টা কড়া ভুনা করা কুষ্টিয়ার বিখ্যাত গরুর মাংস।", prep: "১৫-২০ মিনিট" }
+            },
+            5: {
+                en: { name: "Kushtia Famous Crispy Tiler Khaja", desc: "Crispy layered sweet delicacy coated with premium white sesame seeds.", prep: "Ready" },
+                bn: { name: "কুষ্টিয়ার বিখ্যাত ক্রিস্পি তিলের খাজা", desc: "কুষ্টিয়ার বিখ্যাত কুড়মুড়ে সুস্বাদু খাঁটি তিলের খাজা, প্রতিটি কামড়ে মিষ্টি ও মুচমুচে স্বাদ।", prep: "তাত্ক্ষণিক" }
+            },
+            6: {
+                en: { name: "Special Doi Fuchka & Chotpoti", desc: "Crunchy puris filled with spiced potato and chickpea mix, topped with creamy curd & tamarind chutney.", prep: "10-15 mins" },
+                bn: { name: "স্পেশাল দই ফুচকা ও চটপটি প্ল্যাটার", desc: "মচমচে ফুচকায় মসলাদার আলু ও ডাবলি, উপরে মিষ্টি-টক দই ও কুষ্টিয়ার তেঁতুলের চাটনি।", prep: "১০-১৫ মিনিট" }
+            },
+            7: {
+                en: { name: "Shahi Morog Polao with Boiled Egg", desc: "Fragrant chinigura rice cooked in chicken broth served with a whole chicken quarter and boiled egg.", prep: "15-20 mins" },
+                bn: { name: "শাহী মোরগ পোলাও ও সিদ্ধ ডিম", desc: "সুগন্ধি চিনিগুঁড়া চাল, খাঁটি ঘি ও স্পেশাল চিকেন রোস্ট সহযোগে পরিবেশন করা কুষ্টিয়ার শাহী পোলাও।", prep: "১৫-২০ মিনিট" }
+            },
+            8: {
+                en: { name: "Deshi Ghee Porota & Dal Bhaji", desc: "Flaky crispy paratha fried in pure ghee, served with thick spiced lentil bhaji.", prep: "10-15 mins" },
+                bn: { name: "গাওয়া ঘিয়ে ভাজা স্পেশাল পরোটা ও ডাল", desc: "খাঁটি গাওয়া ঘিয়ে ভাজা খাস্তা পরোটা ও ঘন স্পাইসি বুটের ডাল ভাজি।", prep: "১০-১৫ মিনিট" }
+            }
+        };
+
+        document.querySelectorAll('.food-card').forEach(card => {
+            const id = parseInt(card.getAttribute('data-id'));
+            const data = cardDictionary[id];
+            if (data) {
+                const trans = isBn ? data.bn : data.en;
+                const nameEl = card.querySelector('.food-item-name');
+                const descEl = card.querySelector('.food-item-desc');
+                const addBtn = card.querySelector('.btn-add-cart');
+
+                if (nameEl) nameEl.innerText = trans.name;
+                if (descEl) descEl.innerText = trans.desc;
+                if (addBtn) {
+                    addBtn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> ${isBn ? 'অর্ডার' : 'Add'}`;
+                }
+            }
+
+            // Translate badges
+            const chefBadge = card.querySelector('.badge-brand');
+            if (chefBadge) chefBadge.innerText = isBn ? 'কুষ্টিয়া স্পেশাল' : 'Kushtia Special';
+
+            const vegBadge = card.querySelector('.badge-success');
+            if (vegBadge) vegBadge.innerText = isBn ? 'নিরামিষ / Veg' : 'Vegetarian';
+
+            const spicyBadge = card.querySelector('.badge-spicy');
+            if (spicyBadge) spicyBadge.innerText = isBn ? '🌶️ ঝাল' : '🌶️ Spicy';
         });
     }
 
@@ -1285,6 +1444,19 @@ class CraveApp {
     }
 }
 
+// Global fallback helper
+window.toggleLanguage = function() {
+    if (window.craveApp && typeof window.craveApp.toggleLanguage === 'function') {
+        window.craveApp.toggleLanguage();
+    } else {
+        const cur = localStorage.getItem('kushtia_lang') || 'bn';
+        const next = cur === 'bn' ? 'en' : 'bn';
+        localStorage.setItem('kushtia_lang', next);
+        location.reload();
+    }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     window.craveApp = new CraveApp();
 });
+
