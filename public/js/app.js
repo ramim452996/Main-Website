@@ -19,6 +19,7 @@ class CraveApp {
         this.currentCustomizingItem = null;
         this.activeOrder = JSON.parse(localStorage.getItem('kushtia_active_order') || 'null');
         this.currentUser = JSON.parse(localStorage.getItem('kushtia_user') || 'null');
+        this.currentLang = localStorage.getItem('kushtia_lang') || 'bn';
         this.trackingInterval = null;
 
         this.init();
@@ -26,6 +27,7 @@ class CraveApp {
 
     init() {
         this.initTheme();
+        this.initLang();
         this.initAuth();
         this.renderCart();
         this.bindEvents();
@@ -65,6 +67,294 @@ class CraveApp {
                 ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>` 
                 : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
         }
+    }
+
+    /* ==========================================
+       1.5. GLOBAL BILINGUAL TRANSLATION ENGINE (EN / BN)
+       ========================================== */
+    initLang() {
+        const savedLang = localStorage.getItem('kushtia_lang') || 'bn';
+        this.setLanguage(savedLang, false);
+
+        document.querySelectorAll('.lang-toggle-btn, .lang-floating-switcher').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const nextLang = this.currentLang === 'bn' ? 'en' : 'bn';
+                this.setLanguage(nextLang, true);
+            });
+        });
+    }
+
+    toggleLanguage() {
+        const nextLang = this.currentLang === 'bn' ? 'en' : 'bn';
+        this.setLanguage(nextLang, true);
+    }
+
+    setLanguage(lang, showToast = true) {
+        this.currentLang = lang;
+        localStorage.setItem('kushtia_lang', lang);
+        document.documentElement.setAttribute('lang', lang);
+
+        // Update all language toggle buttons
+        document.querySelectorAll('.lang-toggle-btn').forEach(btn => {
+            if (lang === 'bn') {
+                btn.innerHTML = `<span class="lang-flag">🇧🇩</span> <span class="lang-text">বাংলা</span> <span style="font-size:0.75rem; color:var(--text-muted);">| EN</span>`;
+                btn.title = "Switch to English";
+            } else {
+                btn.innerHTML = `<span class="lang-flag">🇬🇧</span> <span class="lang-text">English</span> <span style="font-size:0.75rem; color:var(--text-muted);">| বাংলা</span>`;
+                btn.title = "বাংলায় পরিবর্তন করুন";
+            }
+        });
+
+        // Translate the whole DOM
+        this.translateDOM();
+
+        // Re-render dynamic components
+        this.renderCart();
+        this.renderAuthUI();
+        if (typeof this.fetchFoodItems === 'function') {
+            this.fetchFoodItems();
+        }
+
+        if (showToast) {
+            this.showToast(lang === 'bn' ? '🇧🇩 ভাষা পরিবর্তন করা হয়েছে: বাংলা' : '🇬🇧 Language switched to: English', 'brand');
+        }
+    }
+
+    translateDOM() {
+        const isBn = this.currentLang === 'bn';
+        const dict = this.getDictionary();
+
+        // 1. Text elements with data-i18n
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (dict[key]) {
+                el.innerHTML = dict[key];
+            }
+        });
+
+        // 2. Bilingual pair elements data-en / data-bn
+        document.querySelectorAll('[data-en][data-bn]').forEach(el => {
+            el.innerHTML = isBn ? el.getAttribute('data-bn') : el.getAttribute('data-en');
+        });
+
+        // 3. Placeholders with data-i18n-placeholder
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            if (dict[key]) {
+                el.placeholder = dict[key];
+            }
+        });
+        document.querySelectorAll('[data-placeholder-en][data-placeholder-bn]').forEach(el => {
+            el.placeholder = isBn ? el.getAttribute('data-placeholder-bn') : el.getAttribute('data-placeholder-en');
+        });
+    }
+
+    getDictionary() {
+        const isBn = this.currentLang === 'bn';
+        if (isBn) {
+            return {
+                'nav.home': 'হোমপেজ',
+                'nav.menu': 'খাবারের মেনু',
+                'nav.orders': 'অর্ডার ট্র্যাকিং',
+                'nav.contact': 'যোগাযোগ',
+                'nav.auth': 'সাইন আপ / লগইন',
+                'nav.cart': 'কার্ট',
+                'nav.track_order': 'অর্ডার ট্র্যাকিং',
+                'hero.badge': 'কুষ্টিয়া শহরে মাত্র ২০ মিনিটে দ্রুততম ফুড ডেলিভারি',
+                'hero.title': 'কুষ্টিয়ার খাঁটি স্বাদ <br/><span class="gradient-text">আপনার দোরগোড়ায়</span>',
+                'hero.subtitle': 'বিখ্যাত কুলফি মালাই, গড়াইয়ের খাঁটি ইলিশ, শাহী বিরিয়ানি ও লোভনীয় স্ট্রিট ফুড উপভোগ করুন কুষ্টিয়ার সেরা রেস্টুরেন্ট থেকে।',
+                'hero.search_placeholder': 'খাবার বা রেস্টুরেন্ট সার্চ করুন (যেমন: কুলফি, বিরিয়ানি)...',
+                'hero.stat_speed': '১৫-২০ মিনিট',
+                'hero.stat_speed_lbl': 'গড় ডেলিভারি সময়',
+                'hero.stat_rating': '৪.৯ ★ রেটিং',
+                'hero.stat_rating_lbl': '২৫,০০০+ সন্তুষ্ট ভোজনরসিক',
+                'hero.stat_restaurants': '৫০+ কিচেন',
+                'hero.stat_restaurants_lbl': 'কুষ্টিয়া সেরা রেস্তোরাঁ',
+                'menu.section_badge': '🍽️ আমাদের এক্সক্লুসিভ মেনু',
+                'menu.section_title': 'কুষ্টিয়ার লোভনীয় <span class="gradient-text">খাবারের সমাহার</span>',
+                'menu.section_subtitle': 'শতভাগ ফ্রেশ উপাদান, হাইজেনিক রান্না এবং কুষ্টিয়া শহরের সেরা রেসিপিতে তৈরি।',
+                'menu.tab_all': 'সব খাবার',
+                'menu.tab_heritage': 'কুষ্টিয়া হেরিটেজ ও কুলফি',
+                'menu.tab_biryani': 'বিরিয়ানি ও রাইস মিলস',
+                'menu.tab_street': 'স্ট্রিট ফুড ও স্ন্যাক্স',
+                'menu.tab_sweets': 'মিষ্টি ও ডেজার্ট',
+                'menu.tab_drinks': 'বেভারেজ ও চা',
+                'menu.filter_veg': '🌱 নিরামিষ / Veg',
+                'menu.filter_spicy': '🌶️ মশলাদার',
+                'menu.filter_chef': '👑 শেফ স্পেশাল',
+                'menu.filter_budget': '⚡ বাজেট ফুড (<৳১৫০)',
+                'menu.sort_popular': 'জনপ্রিয়তা অনুযায়ী',
+                'menu.sort_rating': 'সর্বোচ্চ রেটিং',
+                'menu.sort_price_low': 'দাম: কম থেকে বেশি',
+                'menu.sort_price_high': 'দাম: বেশি থেকে কম',
+                'menu.sort_prep_time': 'দ্রুততম ডেলিভারি',
+                'cart.title': 'আপনার খাবারের কার্ট',
+                'cart.free_del_prompt': 'আর মাত্র <strong>৳৪০০</strong> অর্ডারে পাচ্ছেন <strong>ফ্রি হোম ডেলিভারি</strong>',
+                'cart.free_del_unlocked': '🎉 অভিনন্দন! আপনি <strong>ফ্রি হোম ডেলিভারি</strong> পাচ্ছেন!',
+                'cart.empty_title': 'আপনার কার্ট খালি!',
+                'cart.empty_desc': 'মেনু থেকে আপনার পছন্দের খাবার কার্টে যুক্ত করুন।',
+                'cart.subtotal': 'মোট মূল্য',
+                'cart.delivery_fee': 'ডেলিভারি চার্জ',
+                'cart.free': 'ফ্রি',
+                'cart.coupon_discount': 'কুপন ডিসকাউন্ট',
+                'cart.vat': 'ভ্যাট ও সার্ভিস চার্জ (৫%)',
+                'cart.total': 'সর্বমোট',
+                'cart.checkout_btn': 'অর্ডার কনফার্ম করুন (চেকআউট)',
+                'checkout.modal_title': 'চেকআউট ও ডেলিভারি তথ্য',
+                'checkout.name_lbl': 'আপনার পূর্ণ নাম *',
+                'checkout.phone_lbl': 'মোবাইল নম্বর (বিকাশ/নগদ/কল) *',
+                'checkout.zone_lbl': 'কুষ্টিয়া ডেলিভারি এলাকা *',
+                'checkout.address_lbl': 'সুনির্দিষ্ট ঠিকানা (বাসা/রোড নম্বর) *',
+                'checkout.notes_lbl': 'বিশেষ কোনো নির্দেশনা (ঐচ্ছিক)',
+                'checkout.payment_lbl': 'পেমেন্ট মাধ্যম নির্বাচন করুন',
+                'checkout.cod': 'ক্যাশ অন ডেলিভারি',
+                'checkout.bkash': 'বিকাশ / নগদ',
+                'checkout.card': 'কার্ড পেমেন্ট',
+                'checkout.submit_btn': 'অর্ডার কনফার্ম করুন 🚀',
+                'order_page.title': 'লাইভ অর্ডার ট্র্যাকিং • KushtiaExpress',
+                'order_page.hero_title': 'আপনার খাবার <span class="gradient-text">কোথায় আছে জানুন</span>',
+                'order_page.search_placeholder': 'অর্ডার কোড লিখুন (যেমন: KST-9872)...',
+                'order_page.search_btn': 'খুঁজুন',
+                'order_page.stage_received': 'অর্ডার গৃহীত হয়েছে',
+                'order_page.stage_preparing': 'রান্না চলছে',
+                'order_page.stage_onway': 'রাইডার পথে আছে',
+                'order_page.stage_delivered': 'ডেলিভারি সম্পন্ন',
+                'auth.signup_tab': 'নতুন সাইন আপ (Sign Up)',
+                'auth.login_tab': 'লগইন (Sign In)',
+                'auth.name_lbl': 'আপনার পূর্ণ নাম *',
+                'auth.phone_lbl': 'মোবাইল নম্বর *',
+                'auth.email_lbl': 'ইমেইল ঠিকানা *',
+                'auth.zone_lbl': 'কুষ্টিয়া ডেলিভারি জোন',
+                'auth.address_lbl': 'বাসা/ঠিকানা (ঐচ্ছিক)',
+                'auth.pass_lbl': 'পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর) *',
+                'auth.signup_submit': 'সাইন আপ সম্পন্ন করুন',
+                'auth.login_submit': 'লগইন করুন',
+            };
+        } else {
+            return {
+                'nav.home': 'Home',
+                'nav.menu': 'Food Menu',
+                'nav.orders': 'Order Tracking',
+                'nav.contact': 'Contact Us',
+                'nav.auth': 'Sign In / Register',
+                'nav.cart': 'Cart',
+                'nav.track_order': 'Track Order',
+                'hero.badge': 'Fastest 20-Min Food Delivery in Kushtia City',
+                'hero.title': 'Authentic Taste of Kushtia <br/><span class="gradient-text">Delivered to Your Door</span>',
+                'hero.subtitle': 'Enjoy famous Royal Kulfi Malai, Gorai Fresh Ilish, Shahi Biryani, and sizzling street delicacies from Kushtia’s finest kitchens.',
+                'hero.search_placeholder': 'Search delicious food or restaurants (e.g. Kulfi, Biryani)...',
+                'hero.stat_speed': '15-20 Mins',
+                'hero.stat_speed_lbl': 'Avg. Delivery Speed',
+                'hero.stat_rating': '4.9 ★ Rating',
+                'hero.stat_rating_lbl': '25,000+ Happy Foodies',
+                'hero.stat_restaurants': '50+ Kitchens',
+                'hero.stat_restaurants_lbl': 'Kushtia Top Restaurants',
+                'menu.section_badge': '🍽️ Our Exclusive Menu',
+                'menu.section_title': 'Kushtia’s Delicious <span class="gradient-text">Food Catalog</span>',
+                'menu.section_subtitle': '100% fresh ingredients, hygienic preparation, and authentic recipes loved across Kushtia.',
+                'menu.tab_all': 'All Items',
+                'menu.tab_heritage': 'Kushtia Heritage & Kulfi',
+                'menu.tab_biryani': 'Biryani & Rice Meals',
+                'menu.tab_street': 'Street Food & Snacks',
+                'menu.tab_sweets': 'Sweets & Desserts',
+                'menu.tab_drinks': 'Beverages & Tea',
+                'menu.filter_veg': '🌱 Vegetarian',
+                'menu.filter_spicy': '🌶️ Spicy',
+                'menu.filter_chef': '👑 Chef Special',
+                'menu.filter_budget': '⚡ Budget Food (<৳150)',
+                'menu.sort_popular': 'Most Popular',
+                'menu.sort_rating': 'Highest Rated',
+                'menu.sort_price_low': 'Price: Low to High',
+                'menu.sort_price_high': 'Price: High to Low',
+                'menu.sort_prep_time': 'Fastest Delivery',
+                'cart.title': 'Your Food Cart',
+                'cart.free_del_prompt': 'Add <strong>৳400</strong> more to get <strong>FREE Home Delivery</strong>',
+                'cart.free_del_unlocked': '🎉 Congratulations! You unlocked <strong>FREE Delivery</strong>!',
+                'cart.empty_title': 'Your Cart is Empty!',
+                'cart.empty_desc': 'Add delicious items from the menu to get started.',
+                'cart.subtotal': 'Subtotal',
+                'cart.delivery_fee': 'Delivery Fee',
+                'cart.free': 'Free',
+                'cart.coupon_discount': 'Coupon Discount',
+                'cart.vat': 'VAT & Service Fee (5%)',
+                'cart.total': 'Total Amount',
+                'cart.checkout_btn': 'Proceed to Checkout',
+                'checkout.modal_title': 'Checkout & Delivery Details',
+                'checkout.name_lbl': 'Full Name *',
+                'checkout.phone_lbl': 'Mobile Phone (bKash/Nagad/Call) *',
+                'checkout.zone_lbl': 'Kushtia Delivery Zone *',
+                'checkout.address_lbl': 'Street / House Address *',
+                'checkout.notes_lbl': 'Special Cooking Instructions (Optional)',
+                'checkout.payment_lbl': 'Select Payment Method',
+                'checkout.cod': 'Cash on Delivery',
+                'checkout.bkash': 'bKash / Nagad',
+                'checkout.card': 'Debit / Credit Card',
+                'checkout.submit_btn': 'Confirm & Place Order 🚀',
+                'order_page.title': 'Live Order Tracking • KushtiaExpress',
+                'order_page.hero_title': 'Track Exactly <span class="gradient-text">Where Your Food Is</span>',
+                'order_page.search_placeholder': 'Enter Order Code (e.g. KST-9872)...',
+                'order_page.search_btn': 'Track',
+                'order_page.stage_received': 'Order Received',
+                'order_page.stage_preparing': 'Kitchen Preparing',
+                'order_page.stage_onway': 'Rider On The Way',
+                'order_page.stage_delivered': 'Delivered',
+                'auth.signup_tab': 'Sign Up',
+                'auth.login_tab': 'Sign In',
+                'auth.name_lbl': 'Full Name *',
+                'auth.phone_lbl': 'Mobile Number *',
+                'auth.email_lbl': 'Email Address *',
+                'auth.zone_lbl': 'Kushtia Delivery Zone',
+                'auth.address_lbl': 'Address (Optional)',
+                'auth.pass_lbl': 'Password (Min 6 chars) *',
+                'auth.signup_submit': 'Complete Sign Up',
+                'auth.login_submit': 'Sign In',
+            };
+        }
+    }
+
+    localizeFoodItem(item) {
+        if (!item) return item;
+        const isBn = this.currentLang === 'bn';
+
+        // Translation dictionary for all authentic Kushtia seeded dishes
+        const bnFoodNames = {
+            'Kushtia Famous Royal Shahi Kulfi Malai': 'কুষ্টিয়ার বিখ্যাত রয়্যাল শাহী কুলফি মালাই',
+            'Authentic Kushtia Tiler Khaja (Crispy Sesame Crunch)': 'ঐতিহ্যবাহী কুষ্টিয়ার তিলের খাজা',
+            'Gorai Special Ilish Paturi (Mustard Hilsa)': 'গড়াই স্পেশাল সর্ষে ইলিশ পাতুড়ি',
+            'Kushtia Shahi Mutton Kacchi Biryani': 'কুষ্টিয়া শাহী খাসির কাচ্চি বিরিয়ানি',
+            'Old Town Spicy Beef Kala Bhuna Platter': 'পুরান কুষ্টিয়া স্পাইসি বিফ কালা ভুনা প্ল্যাটার',
+            'Lalon Shah Morog Polao (Heritage Recipe)': 'লালন শাহ মোরগ পোলাও (ঐতিহ্যবাহী)',
+            'Mojompur Station Crispy Fuchka & Doi Chotpoti': 'মজমুপুর স্পেশাল ক্রিস্পি ফুচকা ও দই চটপটি',
+            'Kushtia Ghee Baked Shahi Nimki & Singara Combo': 'ঘিয়ে ভাজা শাহী নিমকি ও গরম গরম সিঙ্গারা',
+            'Chourhas Highway Special Spicy Chicken Chaap': 'চৌড়হাস হাইওয়ে স্পেশাল চিকেন চাপ ও নান',
+            'Rabri Falooda Delight with Royal Kulfi Cut': 'রয়্যাল কুলফি কাটসহ শাহী রাবড়ি ফালুদা',
+            'Kushtia Pure Chanar Golapjamun (Hot)': 'কুষ্টিয়ার খাঁটি ছানার গরম গোলাপজামুন',
+            'Lalon Akhrar Special Masala Dudh Cha (Clay Cup)': 'মাটির ভাঁড়ে খাঁটি গাভীর দুধ চা'
+        };
+
+        const enFoodDescs = {
+            'Kushtia Famous Royal Shahi Kulfi Malai': 'Authentic rich milk rabri, pistachios, cashews, and saffron crafted into famous traditional kulfi.',
+            'Authentic Kushtia Tiler Khaja (Crispy Sesame Crunch)': 'Crispy wafer-thin layers made with pure sesame seeds and sugarcane jaggery.',
+            'Gorai Special Ilish Paturi (Mustard Hilsa)': 'Fresh Padma/Gorai river Hilsa steamed in banana leaf with mustard & green chilies.',
+            'Kushtia Shahi Mutton Kacchi Biryani': 'Fragrant Chinigura rice layered with tender mutton marinated in special secret spices.',
+            'Old Town Spicy Beef Kala Bhuna Platter': 'Slow-cooked traditional caramelized beef with mustard oil and steamed parathas.',
+            'Lalon Shah Morog Polao (Heritage Recipe)': 'Heritage farm chicken cooked with aromatic Chinigura rice and rich ghee.',
+            'Mojompur Station Crispy Fuchka & Doi Chotpoti': '10 pieces crispy fuchka stuffed with spiced potato, boiled egg, and tangy tamarind water.',
+            'Kushtia Ghee Baked Shahi Nimki & Singara Combo': 'Fresh crispy kolija singaras and flaky ghee nimkis served with coriander chutney.',
+            'Chourhas Highway Special Spicy Chicken Chaap': 'Slow shallow-fried spicy whole chicken thigh served with hot butter garlic naan.',
+            'Rabri Falooda Delight with Royal Kulfi Cut': 'Rose syrup falooda noodles, sweet basil seeds, rich rabri, and kulfi slices.',
+            'Kushtia Pure Chanar Golapjamun (Hot)': '4 pieces hot authentic cottage cheese gulab jamuns soaked in aromatic cardamom syrup.',
+            'Lalon Akhrar Special Masala Dudh Cha (Clay Cup)': 'Creamy pure cow milk tea brewed with crushed cardamom, cinnamon, and cloves in clay cup.'
+        };
+
+        const displayName = isBn && bnFoodNames[item.name] ? bnFoodNames[item.name] : item.name;
+        const displayDesc = !isBn && enFoodDescs[item.name] ? enFoodDescs[item.name] : item.description;
+
+        return {
+            ...item,
+            displayName,
+            displayDesc
+        };
     }
 
     /* ==========================================
@@ -209,29 +499,31 @@ class CraveApp {
         const grid = document.getElementById('foodItemsGrid');
         if (!grid) return;
 
+        const isBn = this.currentLang === 'bn';
         if (items.length === 0) {
             grid.innerHTML = `
                 <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
                     <div style="font-size: 3rem; margin-bottom: 12px;">🍲</div>
-                    <h3 style="font-size: 1.4rem; margin-bottom: 8px;">কোনো খাবার খুঁজে পাওয়া যায়নি</h3>
-                    <p style="color: var(--text-muted); font-size: 0.95rem;">অন্য কিছু লিখে সার্চ করুন অথবা ফিল্টার পরিবর্তন করুন।</p>
+                    <h3 style="font-size: 1.4rem; margin-bottom: 8px;">${isBn ? 'কোনো খাবার খুঁজে পাওয়া যায়নি' : 'No food items found'}</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">${isBn ? 'অন্য কিছু লিখে সার্চ করুন অথবা ফিল্টার পরিবর্তন করুন।' : 'Try searching for something else or change filter options.'}</p>
                 </div>
             `;
             return;
         }
 
-        grid.innerHTML = items.map(item => {
+        grid.innerHTML = items.map(rawItem => {
+            const item = this.localizeFoodItem(rawItem);
             const isSpicy = item.is_spicy;
             const isVeg = item.is_vegetarian;
 
             return `
                 <div class="food-card" data-id="${item.id}">
                     <div class="food-card-img-wrap">
-                        <img src="${item.image}" alt="${item.name}" loading="lazy" />
+                        <img src="${item.image}" alt="${item.displayName}" loading="lazy" />
                         <div class="food-card-badges">
-                            ${item.is_chef_special ? `<span class="badge badge-brand">কুষ্টিয়া স্পেশাল</span>` : ''}
-                            ${isVeg ? `<span class="badge badge-success">নিরামিষ / Veg</span>` : ''}
-                            ${isSpicy ? `<span class="badge badge-spicy">🌶️ ঝাল</span>` : ''}
+                            ${item.is_chef_special ? `<span class="badge badge-brand">${isBn ? 'কুষ্টিয়া স্পেশাল' : 'Kushtia Special'}</span>` : ''}
+                            ${isVeg ? `<span class="badge badge-success">${isBn ? 'নিরামিষ / Veg' : 'Vegetarian'}</span>` : ''}
+                            ${isSpicy ? `<span class="badge badge-spicy">🌶️ ${isBn ? 'মশলাদার' : 'Spicy'}</span>` : ''}
                         </div>
                         <div class="food-rating-badge">
                             ★ <span>${item.rating.toFixed(1)}</span> (${item.reviews_count})
@@ -246,23 +538,23 @@ class CraveApp {
                             ${item.calories ? `
                             <div class="food-meta-item">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c1.5 3 4 5 4 9 0 4.4-3.6 8-8 8s-8-3.6-8-8c0-4 2.5-6 4-9 1.5 3 2.5 4 4 4s2.5-1 4-4z"></path></svg>
-                                <span>${item.calories} ক্যালোরি</span>
+                                <span>${item.calories} ${isBn ? 'ক্যালোরি' : 'kcal'}</span>
                             </div>` : ''}
                         </div>
-                        <h4 class="food-item-name">${item.name}</h4>
-                        <p class="food-item-desc">${item.description}</p>
+                        <h4 class="food-item-name">${item.displayName}</h4>
+                        <p class="food-item-desc">${item.displayDesc}</p>
                         <div class="food-card-footer">
                             <div class="price-wrap">
                                 <span class="food-price">৳${item.price.toFixed(0)}</span>
                                 ${item.original_price ? `<span class="original-price">৳${item.original_price.toFixed(0)}</span>` : ''}
                             </div>
                             <div class="card-action-group">
-                                <button class="btn-customize" onclick="window.craveApp.openCustomizeModal(${JSON.stringify(item).replace(/"/g, '&quot;')})" title="কাস্টমাইজ ও অপশন">
+                                <button class="btn-customize" onclick="window.craveApp.openCustomizeModal(${JSON.stringify(rawItem).replace(/"/g, '&quot;')})" title="${isBn ? 'কাস্টমাইজ ও অপশন' : 'Customize & Options'}">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                                 </button>
-                                <button class="btn-add-cart" onclick="window.craveApp.quickAddToCart(${JSON.stringify(item).replace(/"/g, '&quot;')})">
+                                <button class="btn-add-cart" onclick="window.craveApp.quickAddToCart(${JSON.stringify(rawItem).replace(/"/g, '&quot;')})">
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                                    অর্ডার
+                                    ${isBn ? 'অর্ডার' : 'Add'}
                                 </button>
                             </div>
                         </div>
@@ -468,6 +760,7 @@ class CraveApp {
     }
 
     renderCart() {
+        const isBn = this.currentLang === 'bn';
         const totalCount = this.cart.reduce((sum, i) => sum + i.quantity, 0);
         const badge = document.getElementById('navCartCount');
         if (badge) {
@@ -482,9 +775,9 @@ class CraveApp {
             list.innerHTML = `
                 <div style="text-align: center; padding: 60px 20px;">
                     <div style="font-size: 3rem; margin-bottom: 12px;">🛒</div>
-                    <h4 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 6px;">আপনার কার্ট খালি</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">কুষ্টিয়ার সুস্বাদু খাবার উপভোগ করতে মেনু দেখুন!</p>
-                    <button class="btn btn-primary" onclick="window.craveApp.closeCart(); document.getElementById('menu-catalog').scrollIntoView({behavior: 'smooth'})">মেনু দেখুন</button>
+                    <h4 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 6px;">${isBn ? 'আপনার কার্ট খালি' : 'Your cart is empty'}</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">${isBn ? 'কুষ্টিয়ার সুস্বাদু খাবার উপভোগ করতে মেনু দেখুন!' : 'Explore our menu for delicious Kushtia meals!'}</p>
+                    <button class="btn btn-primary" onclick="window.craveApp.closeCart(); document.getElementById('menu-catalog').scrollIntoView({behavior: 'smooth'})">${isBn ? 'মেনু দেখুন' : 'Explore Menu'}</button>
                 </div>
             `;
             this.updateCartSummary(0);
@@ -496,13 +789,14 @@ class CraveApp {
         list.innerHTML = this.cart.map(item => {
             const itemTotal = item.price * item.quantity;
             subtotal += itemTotal;
+            const localized = this.localizeFoodItem(item);
 
             return `
                 <div class="cart-item-card">
-                    <img src="${item.image}" alt="${item.name}" class="cart-item-img" />
+                    <img src="${item.image}" alt="${localized.displayName || item.name}" class="cart-item-img" />
                     <div class="cart-item-details">
                         <div>
-                            <div class="cart-item-title">${item.name}</div>
+                            <div class="cart-item-title">${localized.displayName || item.name}</div>
                             <div class="cart-item-customs">
                                 ${item.selected_size}${item.selected_toppings?.length ? ` • ${item.selected_toppings.join(', ')}` : ''}
                             </div>
@@ -524,6 +818,7 @@ class CraveApp {
     }
 
     updateCartSummary(subtotal) {
+        const isBn = this.currentLang === 'bn';
         const freeDeliveryThreshold = 400.00;
         const progress = Math.min(100, (subtotal / freeDeliveryThreshold) * 100);
         const meterFill = document.getElementById('deliveryProgressFill');
@@ -532,10 +827,14 @@ class CraveApp {
         if (meterFill && meterText) {
             meterFill.style.width = `${progress}%`;
             if (subtotal >= freeDeliveryThreshold) {
-                meterText.innerHTML = `🎉 আপনি পাচ্ছেন <strong>ফ্রি এক্সপ্রেস ডেলিভারি!</strong>`;
+                meterText.innerHTML = isBn 
+                    ? `🎉 আপনি পাচ্ছেন <strong>ফ্রি এক্সপ্রেস ডেলিভারি!</strong>` 
+                    : `🎉 You unlocked <strong>FREE Express Delivery!</strong>`;
             } else {
                 const diff = (freeDeliveryThreshold - subtotal).toFixed(0);
-                meterText.innerHTML = `আর মাত্র <strong>৳${diff}</strong> অর্ডারে <strong>ফ্রি ডেলিভারি</strong>`;
+                meterText.innerHTML = isBn 
+                    ? `আর মাত্র <strong>৳${diff}</strong> অর্ডারে <strong>ফ্রি ডেলিভারি</strong>` 
+                    : `Add <strong>৳${diff}</strong> more for <strong>FREE Delivery</strong>`;
             }
         }
 

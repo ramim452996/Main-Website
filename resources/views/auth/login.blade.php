@@ -144,43 +144,58 @@
 
         <!-- Login Form Area -->
         <div class="auth-form-wrapper">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                <a href="{{ route('home') }}" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 10px;">
+                <a href="{{ route('home') }}" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;" data-en="← Back to Home" data-bn="← হোমপেজে ফিরে যান">
                     ← হোমপেজে ফিরে যান
                 </a>
-                <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Theme">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                </button>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <!-- Global Language Switcher -->
+                    <button type="button" class="lang-toggle-btn" title="Switch Language / ভাষা পরিবর্তন">
+                        <span class="lang-flag">🇧🇩</span>
+                        <span class="lang-text">বাংলা</span>
+                        <span style="font-size:0.75rem; color:var(--text-muted);">| EN</span>
+                    </button>
+                    <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Theme">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    </button>
+                </div>
             </div>
 
             <div class="auth-card">
                 <div style="margin-bottom: 28px;">
-                    <h2 style="font-size: 2rem; font-weight: 900; margin-bottom: 8px;">কাস্টমার লগইন</h2>
+                    <h2 style="font-size: 2rem; font-weight: 900; margin-bottom: 8px;" data-en="Customer Sign In" data-bn="কাস্টমার লগইন">কাস্টমার লগইন</h2>
                     <p style="color: var(--text-muted); font-size: 0.95rem;">
-                        নতুন কাস্টমার? <a href="{{ route('signup.page') }}" style="color: var(--brand-primary); font-weight: 700;">এখানে নতুন সাইন আপ করুন</a>
+                        <span data-en="New Customer?" data-bn="নতুন কাস্টমার?">নতুন কাস্টমার?</span> 
+                        <a href="{{ route('signup.page') }}" style="color: var(--brand-primary); font-weight: 700;" data-en="Sign Up here" data-bn="এখানে নতুন সাইন আপ করুন">এখানে নতুন সাইন আপ করুন</a>
                     </p>
                 </div>
 
                 <form id="standaloneLoginForm" onsubmit="handleStandaloneLogin(event)">
                     <div class="form-group">
-                        <label class="form-label">মোবাইল নম্বর অথবা ইমেইল *</label>
+                        <label class="form-label" data-en="Mobile Number or Email *" data-bn="মোবাইল নম্বর অথবা ইমেইল *">মোবাইল নম্বর অথবা ইমেইল *</label>
                         <input type="text" id="loginUsername" class="form-control" required placeholder="017XXXXXXXX অথবা email@domain.com" />
                     </div>
 
                     <div class="form-group">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                            <label class="form-label" style="margin: 0;">পাসওয়ার্ড *</label>
+                            <label class="form-label" style="margin: 0;" data-en="Password *" data-bn="পাসওয়ার্ড *">পাসওয়ার্ড *</label>
                         </div>
                         <input type="password" id="loginPass" class="form-control" required placeholder="••••••••" />
                     </div>
 
-                    <button type="submit" id="loginSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 14px; margin-top: 12px; font-size: 1.05rem;">
+                    <button type="submit" id="loginSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 14px; margin-top: 12px; font-size: 1.05rem;" data-en="Sign In 🚀" data-bn="লগইন করুন 🚀">
                         লগইন করুন 🚀
                     </button>
                 </form>
             </div>
         </div>
     </div>
+
+    <!-- FLOATING QUICK LANGUAGE SWITCHER -->
+    <button type="button" class="lang-floating-switcher" onclick="window.craveApp.toggleLanguage()" title="Switch Language / ভাষা পরিবর্তন">
+        <span class="lang-flag">🌐</span>
+        <span class="lang-text">বাংলা / English</span>
+    </button>
 
     <!-- TOAST NOTIFICATION CONTAINER -->
     <div id="toastContainer" class="toast-container"></div>

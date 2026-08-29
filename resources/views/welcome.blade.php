@@ -55,19 +55,26 @@
 
             <!-- Navigation Links -->
             <ul class="nav-links">
-                <li><a href="#menu-catalog" class="nav-link">খাবারের মেনু</a></li>
-                <li><a href="#offers" class="nav-link">অফার</a></li>
-                <li><a href="#chef-spotlight" class="nav-link">কুষ্টিয়ার স্পেশাল</a></li>
-                <li><a href="{{ route('order.bn') }}" class="nav-link">অর্ডার ট্র্যাকিং (বাংলা)</a></li>
-                <li><a href="{{ route('contact.bn') }}" class="nav-link">যোগাযোগ (বাংলা)</a></li>
+                <li><a href="#menu-catalog" class="nav-link" data-i18n="nav.menu">খাবারের মেনু</a></li>
+                <li><a href="#offers" class="nav-link" data-en="Special Offers" data-bn="অফার">অফার</a></li>
+                <li><a href="#chef-spotlight" class="nav-link" data-en="Kushtia Specials" data-bn="কুষ্টিয়ার স্পেশাল">কুষ্টিয়ার স্পেশাল</a></li>
+                <li><a href="{{ route('order.bn') }}" class="nav-link" data-i18n="nav.orders">অর্ডার ট্র্যাকিং</a></li>
+                <li><a href="{{ route('contact.bn') }}" class="nav-link" data-i18n="nav.contact">যোগাযোগ</a></li>
             </ul>
 
-            <!-- Actions (Auth, Theme Toggle, Active Order, Cart Trigger) -->
+            <!-- Actions (Language Switcher, Auth, Theme Toggle, Active Order, Cart Trigger) -->
             <div class="nav-actions">
+                <!-- Global Language Switcher Button (বাংলা ↔ English) -->
+                <button type="button" class="lang-toggle-btn" title="ভাষা পরিবর্তন করুন / Switch Language">
+                    <span class="lang-flag">🇧🇩</span>
+                    <span class="lang-text">বাংলা</span>
+                    <span style="font-size:0.75rem; color:var(--text-muted);">| EN</span>
+                </button>
+
                 <!-- Guest Auth Button (Sign Up / Login) -->
                 <button class="auth-nav-btn auth-guest-view" onclick="window.craveApp.openAuthModal('register')">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    <span>সাইন আপ / লগইন</span>
+                    <span data-i18n="nav.auth">সাইন আপ / লগইন</span>
                 </button>
 
                 <!-- Authenticated User Dropdown -->
@@ -79,17 +86,17 @@
                     </div>
                     <div id="authUserDropdownMenu" class="auth-dropdown-menu">
                         <div style="padding: 6px 12px; border-bottom: 1px solid var(--border-light); margin-bottom: 4px;">
-                            <div style="font-size: 0.75rem; color: var(--text-muted);">লগইন করা অ্যাকাউন্ট</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);" data-en="Logged in Account" data-bn="লগইন করা অ্যাকাউন্ট">লগইন করা অ্যাকাউন্ট</div>
                             <div style="font-weight: 800; font-size: 0.9rem;" class="auth-user-name">কাস্টমার</div>
                         </div>
                         <a href="{{ route('order.bn') }}" class="auth-dropdown-item">
-                            <span>📦 আমার অর্ডারসমূহ</span>
+                            <span data-en="📦 My Orders" data-bn="📦 আমার অর্ডারসমূহ">📦 আমার অর্ডারসমূহ</span>
                         </a>
                         <a href="{{ route('contact.bn') }}" class="auth-dropdown-item">
-                            <span>💬 হেল্পডেস্ক ও সহায়তা</span>
+                            <span data-en="💬 Help & Support" data-bn="💬 হেল্পডেস্ক ও সহায়তা">💬 হেল্পডেস্ক ও সহায়তা</span>
                         </a>
                         <button class="auth-dropdown-item" style="color: var(--danger);" onclick="window.craveApp.handleLogout()">
-                            <span>🚪 লগআউট (Logout)</span>
+                            <span data-en="🚪 Logout" data-bn="🚪 লগআউট (Logout)">🚪 লগআউট (Logout)</span>
                         </button>
                     </div>
                 </div>
@@ -97,7 +104,7 @@
                 <!-- Track Active Order Button -->
                 <button id="recentOrderTrackBtn" style="display: none;" class="btn btn-secondary" onclick="window.craveApp.openTrackingModal()" title="Track Current Live Order">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                    <span>অর্ডার ট্র্যাকিং</span>
+                    <span data-i18n="nav.track_order">অর্ডার ট্র্যাকিং</span>
                 </button>
 
                 <!-- Dark / Light Theme Toggle -->
@@ -108,7 +115,7 @@
                 <!-- Cart Button Trigger -->
                 <button id="cartDrawerTrigger" class="cart-btn-trigger">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                    <span>কার্ট</span>
+                    <span data-i18n="nav.cart">কার্ট</span>
                     <span id="navCartCount" class="cart-badge-count" style="display: none;">0</span>
                 </button>
             </div>
@@ -811,6 +818,12 @@
             </div>
         </div>
     </div>
+
+    <!-- FLOATING QUICK LANGUAGE SWITCHER -->
+    <button type="button" class="lang-floating-switcher" onclick="window.craveApp.toggleLanguage()" title="Switch Language / ভাষা পরিবর্তন">
+        <span class="lang-flag">🌐</span>
+        <span class="lang-text">বাংলা / English</span>
+    </button>
 
     <!-- TOAST NOTIFICATION CONTAINER -->
     <div id="toastContainer" class="toast-container"></div>

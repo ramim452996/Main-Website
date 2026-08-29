@@ -127,10 +127,17 @@
             </ul>
 
             <div class="nav-actions">
+                <!-- Global Language Switcher Button (বাংলা ↔ English) -->
+                <button type="button" class="lang-toggle-btn" title="Switch Language / ভাষা পরিবর্তন">
+                    <span class="lang-flag">🇬🇧</span>
+                    <span class="lang-text">English</span>
+                    <span style="font-size:0.75rem; color:var(--text-muted);">| বাংলা</span>
+                </button>
+
                 <!-- Guest Auth Button (Sign Up / Login) -->
                 <button class="auth-nav-btn auth-guest-view" onclick="window.craveApp.openAuthModal('register')">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    <span>Sign In / Register</span>
+                    <span data-i18n="nav.auth">Sign In / Register</span>
                 </button>
 
                 <!-- Authenticated User Dropdown -->
@@ -157,18 +164,13 @@
                     </div>
                 </div>
 
-                <!-- Bengali Page Switcher -->
-                <a href="{{ route('contact.bn') }}" class="lang-switch-badge" title="বাংলা ভার্সনে দেখুন (Switch to Bengali)">
-                    <span>🇧🇩 বাংলা ভার্সন</span>
-                </a>
-
                 <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Theme">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                 </button>
 
                 <button id="cartDrawerTrigger" class="cart-btn-trigger">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                    <span>Cart</span>
+                    <span data-i18n="nav.cart">Cart</span>
                     <span id="navCartCount" class="cart-badge-count" style="display: none;">0</span>
                 </button>
             </div>
@@ -472,6 +474,12 @@
             </div>
         </div>
     </div>
+
+    <!-- FLOATING QUICK LANGUAGE SWITCHER -->
+    <button type="button" class="lang-floating-switcher" onclick="window.craveApp.toggleLanguage()" title="Switch Language / ভাষা পরিবর্তন">
+        <span class="lang-flag">🌐</span>
+        <span class="lang-text">বাংলা / English</span>
+    </button>
 
     <!-- TOAST NOTIFICATION CONTAINER -->
     <div id="toastContainer" class="toast-container"></div>

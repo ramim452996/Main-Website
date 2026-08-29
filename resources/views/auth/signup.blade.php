@@ -148,20 +148,29 @@
 
         <!-- Sign Up Form Area -->
         <div class="auth-form-wrapper">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                <a href="{{ route('home') }}" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 10px;">
+                <a href="{{ route('home') }}" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;" data-en="← Back to Home" data-bn="← হোমপেজে ফিরে যান">
                     ← হোমপেজে ফিরে যান
                 </a>
-                <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Theme">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                </button>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <!-- Global Language Switcher -->
+                    <button type="button" class="lang-toggle-btn" title="Switch Language / ভাষা পরিবর্তন">
+                        <span class="lang-flag">🇧🇩</span>
+                        <span class="lang-text">বাংলা</span>
+                        <span style="font-size:0.75rem; color:var(--text-muted);">| EN</span>
+                    </button>
+                    <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Theme">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    </button>
+                </div>
             </div>
 
             <div class="auth-card">
                 <div style="margin-bottom: 24px;">
-                    <h2 style="font-size: 2rem; font-weight: 900; margin-bottom: 8px;">নতুন অ্যাকাউন্ট তৈরি করুন</h2>
+                    <h2 style="font-size: 2rem; font-weight: 900; margin-bottom: 8px;" data-en="Create New Account" data-bn="নতুন অ্যাকাউন্ট তৈরি করুন">নতুন অ্যাকাউন্ট তৈরি করুন</h2>
                     <p style="color: var(--text-muted); font-size: 0.95rem;">
-                        ইতোমধ্যে অ্যাকাউন্ট আছে? <a href="{{ route('login.page') }}" style="color: var(--brand-primary); font-weight: 700;">এখানে লগইন করুন</a>
+                        <span data-en="Already have an account?" data-bn="ইতোমধ্যে অ্যাকাউন্ট আছে?">ইতোমধ্যে অ্যাকাউন্ট আছে?</span> 
+                        <a href="{{ route('login.page') }}" style="color: var(--brand-primary); font-weight: 700;" data-en="Log in here" data-bn="এখানে লগইন করুন">এখানে লগইন করুন</a>
                     </p>
                 </div>
 
@@ -214,6 +223,12 @@
             </div>
         </div>
     </div>
+
+    <!-- FLOATING QUICK LANGUAGE SWITCHER -->
+    <button type="button" class="lang-floating-switcher" onclick="window.craveApp.toggleLanguage()" title="Switch Language / ভাষা পরিবর্তন">
+        <span class="lang-flag">🌐</span>
+        <span class="lang-text">বাংলা / English</span>
+    </button>
 
     <!-- TOAST NOTIFICATION CONTAINER -->
     <div id="toastContainer" class="toast-container"></div>

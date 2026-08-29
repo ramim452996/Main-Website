@@ -89,10 +89,17 @@
             </ul>
 
             <div class="nav-actions">
+                <!-- Global Language Switcher Button (বাংলা ↔ English) -->
+                <button type="button" class="lang-toggle-btn" title="ভাষা পরিবর্তন করুন / Switch Language">
+                    <span class="lang-flag">🇧🇩</span>
+                    <span class="lang-text">বাংলা</span>
+                    <span style="font-size:0.75rem; color:var(--text-muted);">| EN</span>
+                </button>
+
                 <!-- Guest Auth Button (Sign Up / Login) -->
                 <button class="auth-nav-btn auth-guest-view" onclick="window.craveApp.openAuthModal('register')">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    <span>সাইন আপ / লগইন</span>
+                    <span data-i18n="nav.auth">সাইন আপ / লগইন</span>
                 </button>
 
                 <!-- Authenticated User Dropdown -->
@@ -118,11 +125,6 @@
                         </button>
                     </div>
                 </div>
-
-                <!-- English Page Switcher -->
-                <a href="{{ route('order.page') }}" class="lang-switch-badge" title="Switch to English Orders">
-                    <span>🇬🇧 English</span>
-                </a>
 
                 <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Theme">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -404,6 +406,12 @@
             </div>
         </div>
     </div>
+
+    <!-- FLOATING QUICK LANGUAGE SWITCHER -->
+    <button type="button" class="lang-floating-switcher" onclick="window.craveApp.toggleLanguage()" title="Switch Language / ভাষা পরিবর্তন">
+        <span class="lang-flag">🌐</span>
+        <span class="lang-text">বাংলা / English</span>
+    </button>
 
     <!-- TOAST NOTIFICATION CONTAINER -->
     <div id="toastContainer" class="toast-container"></div>
