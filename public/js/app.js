@@ -479,24 +479,30 @@ class CraveApp {
         // Translation dictionary for all authentic Kushtia seeded dishes
         const bnFoodNames = {
             'Kushtia Famous Royal Shahi Kulfi Malai': 'কুষ্টিয়ার বিখ্যাত রয়্যাল শাহী কুলফি মালাই',
+            'Traditional Kushtia Til Khaja & Chomchom Platter': 'কুষ্টিয়ার ঐতিহ্যবাহী তিলের খাজা ও চমচম',
             'Authentic Kushtia Tiler Khaja (Crispy Sesame Crunch)': 'ঐতিহ্যবাহী কুষ্টিয়ার তিলের খাজা',
-            'Gorai Special Ilish Paturi (Mustard Hilsa)': 'গড়াই স্পেশাল সর্ষে ইলিশ পাতুড়ি',
+            'Special Shahi Mutton Kachi Biryani with Borhani': 'শাহী মাটন কাচ্চি বিরিয়ানি ও বোরহানি',
             'Kushtia Shahi Mutton Kacchi Biryani': 'কুষ্টিয়া শাহী খাসির কাচ্চি বিরিয়ানি',
-            'Old Town Spicy Beef Kala Bhuna Platter': 'পুরান কুষ্টিয়া স্পাইসি বিফ কালা ভুনা প্ল্যাটার',
-            'Lalon Shah Morog Polao (Heritage Recipe)': 'লালন শাহ মোরগ পোলাও (ঐতিহ্যবাহী)',
-            'Mojompur Station Crispy Fuchka & Doi Chotpoti': 'মজমুপুর স্পেশাল ক্রিস্পি ফুচকা ও দই চটপটি',
-            'Kushtia Ghee Baked Shahi Nimki & Singara Combo': 'ঘিয়ে ভাজা শাহী নিমকি ও গরম গরম সিঙ্গারা',
+            'Gorai River Fresh Ilish Sorshe Curry (Shorshe Ilish)': 'গড়াই নদীর খাঁটি সর্ষে ইলিশ কারি',
+            'Gorai Special Ilish Paturi (Mustard Hilsa)': 'গড়াই স্পেশাল সর্ষে ইলিশ পাতুড়ি',
+            'Old Town Spicy Beef Kala Bhuna Platter': 'পুরান কুষ্টিয়া স্পাইসি বিফ কালা ভুনা',
+            'Lalon Shah Morog Polao (Heritage Recipe)': 'লালন শাহ স্পেশাল মোরগ পোলাও',
+            'Mojompur Station Crispy Fuchka & Doi Chotpoti': 'মজমুপুর স্টেশন ক্রিস্পি ফুচকা ও দই চটপটি',
+            'Kushtia Ghee Baked Shahi Nimki & Singara Combo': 'ঘিয়ে ভাজা শাহী নিমকি ও গরম সিঙ্গারা',
             'Chourhas Highway Special Spicy Chicken Chaap': 'চৌড়হাস হাইওয়ে স্পেশাল চিকেন চাপ ও নান',
             'Rabri Falooda Delight with Royal Kulfi Cut': 'রয়্যাল কুলফি কাটসহ শাহী রাবড়ি ফালুদা',
             'Kushtia Pure Chanar Golapjamun (Hot)': 'কুষ্টিয়ার খাঁটি ছানার গরম গোলাপজামুন',
-            'Lalon Akhrar Special Masala Dudh Cha (Clay Cup)': 'মাটির ভাঁড়ে খাঁটি গাভীর দুধ চা'
+            'Lalon Akhrar Special Masala Dudh Cha (Clay Cup)': 'লালন আখড়ার স্পেশাল মসলা দুধ চা'
         };
 
         const enFoodDescs = {
             'Kushtia Famous Royal Shahi Kulfi Malai': 'Authentic rich milk rabri, pistachios, cashews, and saffron crafted into famous traditional kulfi.',
+            'Traditional Kushtia Til Khaja & Chomchom Platter': 'Crispy wafer-thin sesame khaja paired with traditional cottage cheese sweets.',
             'Authentic Kushtia Tiler Khaja (Crispy Sesame Crunch)': 'Crispy wafer-thin layers made with pure sesame seeds and sugarcane jaggery.',
-            'Gorai Special Ilish Paturi (Mustard Hilsa)': 'Fresh Padma/Gorai river Hilsa steamed in banana leaf with mustard & green chilies.',
+            'Special Shahi Mutton Kachi Biryani with Borhani': 'Aromatic basmati rice layered with tender mutton marinated in secret dum spices. Served with Borhani.',
             'Kushtia Shahi Mutton Kacchi Biryani': 'Fragrant Chinigura rice layered with tender mutton marinated in special secret spices.',
+            'Gorai River Fresh Ilish Sorshe Curry (Shorshe Ilish)': 'Fresh Gorai river Hilsa cooked with traditional spicy mustard paste gravy.',
+            'Gorai Special Ilish Paturi (Mustard Hilsa)': 'Fresh Padma/Gorai river Hilsa steamed in banana leaf with mustard & green chilies.',
             'Old Town Spicy Beef Kala Bhuna Platter': 'Slow-cooked traditional caramelized beef with mustard oil and steamed parathas.',
             'Lalon Shah Morog Polao (Heritage Recipe)': 'Heritage farm chicken cooked with aromatic Chinigura rice and rich ghee.',
             'Mojompur Station Crispy Fuchka & Doi Chotpoti': '10 pieces crispy fuchka stuffed with spiced potato, boiled egg, and tangy tamarind water.',
@@ -507,7 +513,7 @@ class CraveApp {
             'Lalon Akhrar Special Masala Dudh Cha (Clay Cup)': 'Creamy pure cow milk tea brewed with crushed cardamom, cinnamon, and cloves in clay cup.'
         };
 
-        const displayName = isBn && bnFoodNames[item.name] ? bnFoodNames[item.name] : item.name;
+        const displayName = isBn && bnFoodNames[item.name] ? bnFoodNames[item.name] : (!isBn ? item.name : (bnFoodNames[item.name] || item.name));
         const displayDesc = !isBn && enFoodDescs[item.name] ? enFoodDescs[item.name] : item.description;
 
         return {
